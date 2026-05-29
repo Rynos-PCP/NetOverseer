@@ -122,3 +122,4 @@ ehthumbs.db
 msbuild.log
 msbuild.err
 msbuild.wrn
+/docs/internal

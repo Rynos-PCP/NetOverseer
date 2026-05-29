@@ -13,11 +13,6 @@ Please do **not** report security issues in public GitHub issues. Use GitHub
 - Repository tab **Security** → **Advisories** → **Report a vulnerability**
 - Direct link: <https://github.com/Rynos-PCP/NetOverseer/security/advisories/new>
 
-> **Note for maintainers:** For this link to work, *Private Vulnerability
-> Reporting* must be enabled under
-> **Settings → Code security and analysis → Private vulnerability reporting**.
-> Until then, GitHub responds with 404.
-
 If PVR is not usable for any reason, the fallback channel is to reach out via
 the GitHub account [@Rynos-PCP](https://github.com/Rynos-PCP) – please **do
 not** post technical details publicly, only ask for a private contact channel.
