@@ -1,0 +1,103 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>NetOverseer.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!--
+      Unpackaged-Modus für Entwicklung/Debug.
+      Kein MSIX nötig, App läuft direkt aus bin\x64\Debug\.
+      Für Release-Builds: WindowsPackageType auf MSIX setzen + Package.appxmanifest hinzufügen.
+    -->
+    <!--
+      WindowsPackageType=None  → unpackaged (Entwicklung/portable ZIP)
+      WindowsPackageType=MSIX  → MSIX-Paket (Release-Build per CI/CD)
+      Überschreibbar via: dotnet publish -p:WindowsPackageType=MSIX
+    -->
+    <WindowsPackageType>None</WindowsPackageType>
+
+    <!--
+      WinUI 3 unterstützt kein AnyCPU – explizit x64 als Default-Plattform.
+      In Visual Studio → Build → Configuration Manager → Platform auf x64 setzen.
+    -->
+    <Platforms>x64;x86;arm64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
+    <PlatformTarget>x64</PlatformTarget>
+
+    <UseWinUI>true</UseWinUI>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+
+    <!-- Eigener Main-Einstiegspunkt: erlaubt das Abfangen von CLI-Flags
+         (z. B. startup-monitor) BEVOR WinUI-Application.Start aufgerufen wird. -->
+    <DefineConstants>$(DefineConstants);DISABLE_XAML_GENERATED_MAIN</DefineConstants>
+  </PropertyGroup>
+
+  <!-- MSIX: include Package.appxmanifest and Assets only when building as packaged app -->
+  <ItemGroup Condition="'$(WindowsPackageType)' == 'MSIX'">
+    <AppxManifest Include="Package.appxmanifest" />
+    <!-- Tile/logo assets required by Package.appxmanifest -->
+    <Content Include="Assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Lokalisierungsressourcen (WinUI 3 / MRT) -->
+  <ItemGroup>
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
+    <PRIResource Include="Strings\en-US\Resources.resw" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.251003001" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.6584" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls" Version="7.1.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetOverseer.Core\NetOverseer.Core.csproj" />
+    <ProjectReference Include="..\NetOverseer.Capture\NetOverseer.Capture.csproj" />
+    <ProjectReference Include="..\NetOverseer.Data\NetOverseer.Data.csproj" />
+    <!--
+      BootMonitor wird mitgebaut (Build-Reihenfolge), aber NICHT als Assembly
+      referenziert (eigenes Main, eigene runtime config). Wir kopieren das
+      komplette Output-Verzeichnis nach App\bin\..., damit beide EXEn in
+      derselben Installation nebeneinander liegen.
+    -->
+    <ProjectReference Include="..\NetOverseer.BootMonitor\NetOverseer.BootMonitor.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <UndefineProperties>TargetFramework</UndefineProperties>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <!--
+    Kopiert NetOverseer.BootMonitor.{exe,dll,runtimeconfig.json,deps.json}
+    aus dessen Output-Verzeichnis in das Output-Verzeichnis dieses App-Projekts.
+    Läuft nach Build und ist idempotent. Sucht in beiden Layouts
+    (mit/ohne Platform-Subfolder), weil das Konsolen-Projekt kein
+    Platform-spezifisches OutDir erzeugt.
+  -->
+  <Target Name="CopyBootMonitorOutput" AfterTargets="Build">
+    <ItemGroup>
+      <_BootMonitorFiles Include="$(MSBuildThisFileDirectory)..\NetOverseer.BootMonitor\bin\$(Configuration)\$(TargetFramework)\NetOverseer.BootMonitor.*" />
+      <_BootMonitorFiles Include="$(MSBuildThisFileDirectory)..\NetOverseer.BootMonitor\bin\$(Platform)\$(Configuration)\$(TargetFramework)\NetOverseer.BootMonitor.*" />
+    </ItemGroup>
+    <Message Text="Copying %(_BootMonitorFiles.Identity) → $(OutDir)" Importance="normal" Condition="'@(_BootMonitorFiles)' != ''" />
+    <Copy SourceFiles="@(_BootMonitorFiles)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true"
+          Condition="'@(_BootMonitorFiles)' != ''" />
+  </Target>
+
+</Project>

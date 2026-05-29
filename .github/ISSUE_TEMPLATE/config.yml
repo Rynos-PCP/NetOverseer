@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/Rynos-PCP/NetOverseer/security/advisories/new
+    about: Do NOT file security-related findings as public issues – use GitHub Private Vulnerability Reporting instead. See SECURITY.md for details.
+  - name: Ask a question / start a discussion
+    url: https://github.com/Rynos-PCP/NetOverseer/discussions
+    about: General questions, how-tos, and discussions belong in Discussions, not the issue tracker.

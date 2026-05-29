@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap desktop">
+
+  <Identity
+    Name="NetOverseer"
+    Publisher="CN=NetOverseer"
+    Version="1.0.0.0"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>NetOverseer</DisplayName>
+    <PublisherDisplayName>NetOverseer</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>Real-time network transparency tool for Windows. See which applications connect to which servers, including geolocation, reputation scores, and firewall control.</Description>
+  </Properties>
+
+  <Dependencies>
+    <!-- Minimum: Windows 10 21H2 (Build 19044) for reliable WFP + WinUI 3 support -->
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19044.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US" />
+    <Resource Language="de-DE" />
+  </Resources>
+
+  <Applications>
+    <Application
+      Id="App"
+      Executable="$targetnametoken$.exe"
+      EntryPoint="$targetentrypoint$">
+
+      <uap:VisualElements
+        DisplayName="NetOverseer"
+        Description="Real-time network transparency for Windows"
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+
+        <uap:DefaultTile
+          Wide310x150Logo="Assets\Wide310x150Logo.png"
+          Square71x71Logo="Assets\SmallTile.png"
+          Square310x310Logo="Assets\LargeTile.png"
+          ShortName="NetOverseer">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="wide310x150Logo" />
+            <uap:ShowOn Tile="square150x150Logo" />
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+
+        <uap:LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- Allow running as administrator from MSIX context -->
+        <desktop:Extension Category="windows.fullTrustProcess" Executable="$targetnametoken$.exe" />
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Network access (outbound for AbuseIPDB, GeoLite2 updates) -->
+    <Capability Name="internetClient" />
+    <!-- LAN/intranet connections for local network monitoring -->
+    <Capability Name="privateNetworkClientServer" />
+
+    <!--
+      Restricted capabilities required for WFP network capture and Firewall management.
+      These require justification for Store submission; for sideload/Enterprise this is fine.
+    -->
+    <rescap:Capability Name="networkingVpnProvider" />
+  </Capabilities>
+
+</Package>

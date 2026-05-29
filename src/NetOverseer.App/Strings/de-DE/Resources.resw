@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Navigation (MainWindow)
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Nav_Connections.Content" xml:space="preserve">
+    <value>Verbindungen</value>
+  </data>
+  <data name="Nav_Connections.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aktive Netzwerkverbindungen in Echtzeit</value>
+  </data>
+  <data name="Nav_History.Content" xml:space="preserve">
+    <value>Verlauf</value>
+  </data>
+  <data name="Nav_History.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verbindungshistorie und Zeitachse</value>
+  </data>
+  <data name="Nav_Applications.Content" xml:space="preserve">
+    <value>Anwendungen</value>
+  </data>
+  <data name="Nav_Applications.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Anwendungen und ihre Verbindungshistorie</value>
+  </data>
+  <data name="Nav_Firewall.Content" xml:space="preserve">
+    <value>Firewall-Regeln</value>
+  </data>
+  <data name="Nav_Firewall.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows-Firewall-Regeln verwalten</value>
+  </data>
+  <data name="Nav_Dns.Content" xml:space="preserve">
+    <value>DNS-Anfragen</value>
+  </data>
+  <data name="Nav_Dns.ToolTipService.ToolTip" xml:space="preserve">
+    <value>DNS-Abfragen aller Anwendungen (via ETW)</value>
+  </data>
+  <data name="Nav_Startup.Content" xml:space="preserve">
+    <value>Windows-Start</value>
+  </data>
+  <data name="Nav_Startup.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Programme die beim Windows-Start geladen werden</value>
+  </data>
+  <data name="Nav_Telemetry.Content" xml:space="preserve">
+    <value>Telemetrie</value>
+  </data>
+  <data name="Nav_Telemetry.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Microsoft Telemetriedienste und Datenschutz</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Einstellungsseite – Header & Tabs
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="Tab_General.Header" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Tab_Monitoring.Header" xml:space="preserve">
+    <value>Überwachung</value>
+  </data>
+  <data name="Tab_Reputation.Header" xml:space="preserve">
+    <value>Reputation</value>
+  </data>
+  <data name="Tab_Notifications.Header" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
+  <data name="Tab_Autostart.Header" xml:space="preserve">
+    <value>Autostart</value>
+  </data>
+  <data name="Tab_Storage.Header" xml:space="preserve">
+    <value>Speicherung</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 1: Allgemein
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_Language.Text" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Language_German.Content" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Language_English.Content" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Section_Theme.Text" xml:space="preserve">
+    <value>Design</value>
+  </data>
+  <data name="Theme_System.Content" xml:space="preserve">
+    <value>Systemstandard</value>
+  </data>
+  <data name="Theme_Light.Content" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="Theme_Dark.Content" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="Section_StartWithWindows.Text" xml:space="preserve">
+    <value>Mit Windows starten</value>
+  </data>
+  <data name="StartWithWindowsSwitch.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="StartWithWindowsSwitch.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="Section_DataRetention.Text" xml:space="preserve">
+    <value>Datenspeicherung</value>
+  </data>
+  <data name="DataRetention_Desc.Text" xml:space="preserve">
+    <value>Wie lange sollen Verbindungsdaten gespeichert werden?</value>
+  </data>
+  <data name="Retention_7Days.Content" xml:space="preserve">
+    <value>7 Tage</value>
+  </data>
+  <data name="Retention_30Days.Content" xml:space="preserve">
+    <value>30 Tage</value>
+  </data>
+  <data name="Retention_90Days.Content" xml:space="preserve">
+    <value>90 Tage</value>
+  </data>
+  <data name="Retention_Unlimited.Content" xml:space="preserve">
+    <value>Unbegrenzt</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 2: Überwachung
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_CaptureMethod.Text" xml:space="preserve">
+    <value>Erfassungsmethode</value>
+  </data>
+  <data name="CaptureMethod_Desc.Text" xml:space="preserve">
+    <value>Methode zur Netzwerkverbindungserfassung</value>
+  </data>
+  <data name="CaptureMethod_IpHelper.Content" xml:space="preserve">
+    <value>IP Helper API (Standard, keine Adminrechte)</value>
+  </data>
+  <data name="CaptureMethod_Wfp.Content" xml:space="preserve">
+    <value>Windows Filtering Platform (WFP, erfordert Adminrechte)</value>
+  </data>
+  <data name="Section_PollingInterval.Text" xml:space="preserve">
+    <value>Abfrageintervall</value>
+  </data>
+  <data name="PollingInterval_Prefix.Text" xml:space="preserve">
+    <value>Intervall: </value>
+  </data>
+  <data name="PollingInterval_Hint.Text" xml:space="preserve">
+    <value>Gilt nur für IP Helper API. WFP arbeitet ereignisgesteuert.</value>
+  </data>
+  <data name="Section_PrivateConnections.Text" xml:space="preserve">
+    <value>Private Verbindungen anzeigen</value>
+  </data>
+  <data name="PrivateConnections_Desc.Text" xml:space="preserve">
+    <value>Verbindungen zu lokalen IP-Adressen (192.168.x.x, 10.x.x.x, etc.)</value>
+  </data>
+  <data name="PrivateConnectionsSwitch.OnContent" xml:space="preserve">
+    <value>Sichtbar</value>
+  </data>
+  <data name="PrivateConnectionsSwitch.OffContent" xml:space="preserve">
+    <value>Ausgeblendet</value>
+  </data>
+  <data name="Section_IgnoredProcesses.Text" xml:space="preserve">
+    <value>Ignorierte Prozesse</value>
+  </data>
+  <data name="IgnoredProcesses_Desc.Text" xml:space="preserve">
+    <value>Prozesse, die von der Überwachung ausgeschlossen werden (ein Prozess pro Zeile).</value>
+  </data>
+  <data name="IgnoredProcesses_Placeholder.PlaceholderText" xml:space="preserve">
+    <value>z.B. svchost.exe</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 3: Reputation
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_OfflineMode.Text" xml:space="preserve">
+    <value>Offline-Modus</value>
+  </data>
+  <data name="OfflineMode_Desc.Text" xml:space="preserve">
+    <value>Keine externen Anfragen für Reputationsdaten. Nur lokale Blocklisten werden verwendet.</value>
+  </data>
+  <data name="OfflineModeSwitch.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="OfflineModeSwitch.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="Section_AbuseIpDb.Text" xml:space="preserve">
+    <value>AbuseIPDB API-Schlüssel</value>
+  </data>
+  <data name="AbuseIpDb_Desc.Text" xml:space="preserve">
+    <value>Kostenloser API-Schlüssel unter abuseipdb.com/account/api</value>
+  </data>
+  <data name="AbuseIpDb_Placeholder.PlaceholderText" xml:space="preserve">
+    <value>API-Schlüssel eingeben</value>
+  </data>
+  <data name="AbuseIpDb_DailyLimit.Text" xml:space="preserve">
+    <value>Tägliches Limit: </value>
+  </data>
+  <data name="Section_MaxMind.Text" xml:space="preserve">
+    <value>MaxMind GeoIP2 Lizenzschlüssel</value>
+  </data>
+  <data name="MaxMind_Desc.Text" xml:space="preserve">
+    <value>Für genaue Geolokalisierung. Kostenloser Account unter maxmind.com</value>
+  </data>
+  <data name="MaxMind_Placeholder.PlaceholderText" xml:space="preserve">
+    <value>Lizenzschlüssel eingeben</value>
+  </data>
+  <data name="Section_Blocklist.Text" xml:space="preserve">
+    <value>Blocklisten-Aktualisierung</value>
+  </data>
+  <data name="Blocklist_Interval.Text" xml:space="preserve">
+    <value>Intervall: </value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 4: Benachrichtigungen
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_NotifyUnknown.Text" xml:space="preserve">
+    <value>Neue unbekannte Verbindungen</value>
+  </data>
+  <data name="NotifyUnknownSwitch.OnContent" xml:space="preserve">
+    <value>Benachrichtigung aktiv</value>
+  </data>
+  <data name="NotifyUnknownSwitch.OffContent" xml:space="preserve">
+    <value>Keine Benachrichtigung</value>
+  </data>
+  <data name="Section_NotifyLowRep.Text" xml:space="preserve">
+    <value>Niedrige Reputation</value>
+  </data>
+  <data name="NotifyLowRepSwitch.OnContent" xml:space="preserve">
+    <value>Benachrichtigung aktiv</value>
+  </data>
+  <data name="NotifyLowRepSwitch.OffContent" xml:space="preserve">
+    <value>Keine Benachrichtigung</value>
+  </data>
+  <data name="NotifyLowRep_Threshold.Text" xml:space="preserve">
+    <value>Schwellwert: </value>
+  </data>
+  <data name="Section_NotifyDns.Text" xml:space="preserve">
+    <value>Verdächtige DNS-Anfragen</value>
+  </data>
+  <data name="NotifyDnsSwitch.OnContent" xml:space="preserve">
+    <value>Benachrichtigung aktiv</value>
+  </data>
+  <data name="NotifyDnsSwitch.OffContent" xml:space="preserve">
+    <value>Keine Benachrichtigung</value>
+  </data>
+  <data name="Section_QuietHours.Text" xml:space="preserve">
+    <value>Ruhezeiten</value>
+  </data>
+  <data name="QuietHours_Desc.Text" xml:space="preserve">
+    <value>Keine Benachrichtigungen während der Ruhezeit.</value>
+  </data>
+  <data name="QuietHoursSwitch.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="QuietHoursSwitch.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+  <data name="QuietHours_Start.Text" xml:space="preserve">
+    <value>Beginn: </value>
+  </data>
+  <data name="QuietHours_End.Text" xml:space="preserve">
+    <value>Ende: </value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 5: Autostart
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_StartupMonitor.Text" xml:space="preserve">
+    <value>Überwachung beim Systemstart</value>
+  </data>
+  <data name="StartupMonitor_Desc.Text" xml:space="preserve">
+    <value>Die Netzwerküberwachung wird automatisch beim Windows-Start gestartet. Je nach gewählter Erfassungsmethode können erweiterte Rechte erforderlich sein.</value>
+  </data>
+  <data name="StartupMonitorSwitch.OnContent" xml:space="preserve">
+    <value>Aktiv</value>
+  </data>
+  <data name="StartupMonitorSwitch.OffContent" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Tab 6: Speicherung
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="Section_DataLocation.Text" xml:space="preserve">
+    <value>Datenspeicherort</value>
+  </data>
+  <data name="DataLocation_Desc.Text" xml:space="preserve">
+    <value>Alle Daten werden lokal im AppData-Verzeichnis des Benutzers gespeichert.</value>
+  </data>
+  <data name="OpenDataFolder_Button.Content" xml:space="preserve">
+    <value>Datenordner öffnen</value>
+  </data>
+  <data name="Section_DataSecurity.Text" xml:space="preserve">
+    <value>Datensicherheit</value>
+  </data>
+  <data name="DataSecurity_Desc.Text" xml:space="preserve">
+    <value>API-Schlüssel werden in der Konfigurationsdatei gespeichert. Das Verzeichnis %AppData% ist durch Windows-ACL benutzerspezifisch geschützt und nur für den aktuellen Benutzer zugänglich.</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Speichern-Leiste
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="SaveSettings_Button.Content" xml:space="preserve">
+    <value>Einstellungen speichern</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       Sprachumschaltungs-Dialog
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="LanguageChanged_Title" xml:space="preserve">
+    <value>Sprache geändert</value>
+  </data>
+  <data name="LanguageChanged_Message" xml:space="preserve">
+    <value>Die Spracheinstellung wurde übernommen. Navigiere zu einer anderen Seite und zurück, um die neue Sprache vollständig anzuwenden.</value>
+  </data>
+</root>

@@ -1,0 +1,27 @@
+NetOverseer
+Copyright 2026 Rynos-PCP
+
+This product includes software developed by third parties under their
+respective licenses. See the documentation of the referenced NuGet packages
+for details (CommunityToolkit.Mvvm, CommunityToolkit.WinUI.UI.Controls,
+Microsoft.WindowsAppSDK, Microsoft.Windows.SDK.BuildTools,
+Microsoft.Extensions.*, Microsoft.Data.Sqlite,
+Microsoft.Diagnostics.Tracing.TraceEvent, MaxMind.GeoIP2, System.Reactive,
+System.Drawing.Common, System.ServiceProcess.ServiceController,
+System.Security.Cryptography.ProtectedData, Serilog).
+
+A complete list with licenses is provided in THIRD-PARTY-NOTICES.md.
+
+-------------------------------------------------------------------------------
+AI-ASSISTED DEVELOPMENT NOTICE
+-------------------------------------------------------------------------------
+
+Parts of this software were generated or co-authored with the help
+of AI tools (Large Language Models). Not every feature has been fully tested
+or formally verified. The software is provided "AS IS", without warranty of
+any kind, and the author accepts NO LIABILITY for any damages arising from
+its use, including but not limited to data loss, system instability, hardware
+damage, network outages, security incidents, privacy breaches, or any other
+direct, indirect, incidental or consequential damages. See the "Disclaimer of
+Warranty" (Section 7) and "Limitation of Liability" (Section 8) of the Apache
+License, Version 2.0, and the disclaimer section in README.md for details.

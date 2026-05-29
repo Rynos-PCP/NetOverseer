@@ -1,0 +1,124 @@
+# Windows-spezifisch
+*.user
+*.suo
+*.vs/
+.vs/
+**/obj/
+**/bin/
+*.binlog
+
+# Windows App SDK / MSIX
+AppPackages/
+BundleArtifacts/
+_pkginfo.txt
+*.msixupload
+*.appxupload
+
+# Publish-Ausgaben (keine Binaries im Repo - gehoeren auf GitHub Releases)
+publish/
+**/publish/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Build-Ausgaben
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+arm/
+arm64/
+[Ww][Ii][Nn]32/
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.pch
+*.pdb
+*.ipdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+# Visual Studio
+.vs/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.opendb
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# Rider
+.idea/
+*.sln.iml
+
+# dotnet tools
+.dotnet/
+.config/
+
+# Test-Ergebnisse
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*/
+
+# Serilog-Logs
+logs/
+*.log
+
+# NetOverseer-spezifisch (keine GeoLite2 DB committen → proprietäre MaxMind-Lizenz)
+*.mmdb
+GeoLite2-*.mmdb
+
+# Nutzer-Daten (lokal, kein Commit)
+*.db
+*.db-shm
+*.db-wal
+settings.json
+
+# Zertifikate & Secrets
+*.pfx
+*.snk
+*.key
+*.p12
+secrets.json
+appsettings.*.json
+!appsettings.example.json
+
+# Temporäre Dateien
+Thumbs.db
+Desktop.ini
+.DS_Store
+ehthumbs.db
+
+# MSBuild
+msbuild.log
+msbuild.err
+msbuild.wrn

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="NetOverseer.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NetOverseer">
+
+    <!-- Mica-Material (Windows 11). Auf Windows 10 automatischer Fallback auf Volltonfarbe. -->
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="Base"/>
+    </Window.SystemBackdrop>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>   <!-- NavigationView -->
+            <RowDefinition Height="32"/>  <!-- Statusleiste -->
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Hauptnavigation
+             ═══════════════════════════════════════════════════════════ -->
+        <NavigationView
+            x:Name="NavView"
+            Grid.Row="0"
+            IsSettingsVisible="True"
+            IsBackButtonVisible="Collapsed"
+            AlwaysShowHeader="False"
+            OpenPaneLength="220"
+            PaneTitle="NetOverseer"
+            SelectionChanged="NavView_SelectionChanged"
+            Loaded="NavView_Loaded">
+
+            <NavigationView.MenuItems>
+
+                <!-- Verbindungen (Standard-Startseite) -->
+                <NavigationViewItem
+                    x:Name="NavConnections"
+                    x:Uid="Nav_Connections"
+                    Content="Verbindungen"
+                    Tag="LiveConnections"
+                    ToolTipService.ToolTip="Aktive Netzwerkverbindungen in Echtzeit">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE968;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Verlauf -->
+                <NavigationViewItem
+                    x:Uid="Nav_History"
+                    Content="Verlauf"
+                    Tag="History"
+                    ToolTipService.ToolTip="Verbindungshistorie und Zeitachse">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE81C;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Anwendungen -->
+                <NavigationViewItem
+                    x:Uid="Nav_Applications"
+                    Content="Anwendungen"
+                    Tag="Applications"
+                    ToolTipService.ToolTip="Alle Anwendungen und ihre Verbindungshistorie">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE71D;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Firewall-Regeln -->
+                <NavigationViewItem
+                    x:Uid="Nav_Firewall"
+                    Content="Firewall-Regeln"
+                    Tag="Firewall"
+                    ToolTipService.ToolTip="Windows-Firewall-Regeln verwalten">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE72E;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- DNS-Anfragen -->
+                <NavigationViewItem
+                    x:Uid="Nav_Dns"
+                    Content="DNS-Anfragen"
+                    Tag="Dns"
+                    ToolTipService.ToolTip="DNS-Abfragen aller Anwendungen (via ETW)">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE909;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Windows-Start -->
+                <NavigationViewItem
+                    x:Uid="Nav_Startup"
+                    Content="Windows-Start"
+                    Tag="Startup"
+                    ToolTipService.ToolTip="Programme die beim Windows-Start geladen werden">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7E8;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+                <!-- Windows-Telemetrie -->
+                <NavigationViewItem
+                    x:Uid="Nav_Telemetry"
+                    Content="Telemetrie"
+                    Tag="Telemetry"
+                    ToolTipService.ToolTip="Microsoft Telemetriedienste und Datenschutz">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEA86;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+            </NavigationView.MenuItems>
+
+            <!-- Globale Header-Leiste entfernt: Aufnahme läuft automatisch ab Programmstart.
+                 Manuelle Steuerung (Start/Stop/Restart) befindet sich in Einstellungen → Überwachung. -->
+            <NavigationView.HeaderTemplate>
+                <DataTemplate/>
+            </NavigationView.HeaderTemplate>
+
+            <!-- Seiten-Frame -->
+            <Frame x:Name="ContentFrame" Padding="0,15,0,0"/>
+
+        </NavigationView>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Statusleiste
+             ═══════════════════════════════════════════════════════════ -->
+        <Border
+            Grid.Row="1"
+            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0"
+            Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}">
+
+            <Grid Margin="16,0">
+
+                <!-- Aktive Verbindungen (links – Snapshot) -->
+                <TextBlock
+                    Text="{x:Bind ViewModel.ActiveConnectionsText, Mode=OneWay}"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                <!-- Gesamt-Zähler + Durchsatz (rechts) -->
+                <StackPanel
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Spacing="4">
+
+                    <FontIcon
+                        Glyph="&#xE9F5;"
+                        FontSize="11"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock
+                        Text="{x:Bind ViewModel.NewConnectionsText, Mode=OneWay}"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        ToolTipService.ToolTip="Eindeutige Verbindungen insgesamt seit Capture-Start"/>
+
+                    <AppBarSeparator Margin="8,0"/>
+
+                    <TextBlock
+                        Text="↑"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock
+                        Text="{x:Bind ViewModel.BytesPerSecondUp, Mode=OneWay}"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock
+                        Text="↓"
+                        FontSize="12"
+                        Margin="12,0,0,0"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <TextBlock
+                        Text="{x:Bind ViewModel.BytesPerSecondDown, Mode=OneWay}"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>
+

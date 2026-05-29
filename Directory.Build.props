@@ -1,0 +1,42 @@
+<Project>
+
+  <!--
+    Shared metadata for all projects in the NetOverseer solution.
+    Picked up automatically by MSBuild for every project below the
+    repository root, so each csproj inherits the same Authors,
+    Copyright, license, and repository information.
+  -->
+  <PropertyGroup>
+    <Authors>Rynos-PCP</Authors>
+    <Company>Rynos-PCP</Company>
+    <Product>NetOverseer</Product>
+    <Copyright>Copyright (c) 2026 Rynos-PCP</Copyright>
+
+    <!-- License & repository (SPDX expression; matches the Apache-2.0 LICENSE file). -->
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Rynos-PCP/NetOverseer</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Rynos-PCP/NetOverseer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+
+    <!-- Versioning. Override per release with -p:Version=x.y.z. -->
+    <Version>0.1.0</Version>
+
+    <PackageReadmeFile Condition="Exists('$(MSBuildThisFileDirectory)README.md')">README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)LICENSE"
+          Pack="true" PackagePath="\" Visible="false"
+          Condition="Exists('$(MSBuildThisFileDirectory)LICENSE')" />
+    <None Include="$(MSBuildThisFileDirectory)NOTICE"
+          Pack="true" PackagePath="\" Visible="false"
+          Condition="Exists('$(MSBuildThisFileDirectory)NOTICE')" />
+    <None Include="$(MSBuildThisFileDirectory)THIRD-PARTY-NOTICES.md"
+          Pack="true" PackagePath="\" Visible="false"
+          Condition="Exists('$(MSBuildThisFileDirectory)THIRD-PARTY-NOTICES.md')" />
+    <None Include="$(MSBuildThisFileDirectory)README.md"
+          Pack="true" PackagePath="\" Visible="false"
+          Condition="Exists('$(MSBuildThisFileDirectory)README.md')" />
+  </ItemGroup>
+
+</Project>

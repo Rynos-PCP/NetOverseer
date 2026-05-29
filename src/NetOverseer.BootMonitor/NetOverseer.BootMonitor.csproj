@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>NetOverseer.BootMonitor</RootNamespace>
+    <AssemblyName>NetOverseer.BootMonitor</AssemblyName>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Platforms>x64;x86;arm64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
+    <PlatformTarget>x64</PlatformTarget>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- Kein WinUI/UseWinUI: SYSTEM-Task ONSTART darf in Session 0 NICHT
+         vom WindowsAppRuntime-Bootstrapper abhängen, sonst stirbt der Prozess
+         vor Main mit HRESULT 0x80070699. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Serilog" Version="4.0.2" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NetOverseer.Core\NetOverseer.Core.csproj" />
+    <ProjectReference Include="..\NetOverseer.Capture\NetOverseer.Capture.csproj" />
+    <ProjectReference Include="..\NetOverseer.Data\NetOverseer.Data.csproj" />
+  </ItemGroup>
+
+</Project>

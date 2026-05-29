@@ -1,0 +1,310 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  SOLUTION_FILE: NetOverseer.slnx
+  APP_PROJECT: src/NetOverseer.App/NetOverseer.App.csproj
+  CONFIGURATION: Release
+  PLATFORM: Any CPU
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────
+  # Job 1: Build & Test
+  # ─────────────────────────────────────────────────────────────────
+  build-and-test:
+    name: Build & Test
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for version calculation
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          # .slnx solution files require the .NET 9+ SDK CLI; the 8.0.x
+          # runtime stays installed so the net8.0 projects/tests still run.
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Restore NuGet packages
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build solution
+        run: |
+          dotnet build ${{ env.SOLUTION_FILE }} `
+            --configuration ${{ env.CONFIGURATION }} `
+            --no-restore `
+            "-p:Platform=${{ env.PLATFORM }}" `
+            -p:WindowsPackageType=None
+
+      - name: Run Core tests
+        run: |
+          dotnet test tests/NetOverseer.Core.Tests `
+            --configuration ${{ env.CONFIGURATION }} `
+            --logger "trx;LogFileName=core-tests.trx" `
+            --results-directory TestResults
+
+      - name: Run Capture tests
+        run: |
+          dotnet test tests/NetOverseer.Capture.Tests `
+            --configuration ${{ env.CONFIGURATION }} `
+            --logger "trx;LogFileName=capture-tests.trx" `
+            --results-directory TestResults
+        continue-on-error: true   # Capture tests may need admin rights on CI
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 2: Build portable ZIP (self-contained)
+  # ─────────────────────────────────────────────────────────────────
+  build-portable:
+    name: Build Portable ZIP
+    runs-on: windows-latest
+    needs: build-and-test
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -match '^refs/tags/v(.+)$') {
+            $version = $Matches[1]
+          } else {
+            $sha = $env:GITHUB_SHA.Substring(0, 7)
+            $version = "0.0.0-dev.$sha"
+          }
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "Resolved version: $version"
+
+      - name: Publish portable (self-contained, win-x64)
+        run: |
+          dotnet publish ${{ env.APP_PROJECT }} `
+            --configuration ${{ env.CONFIGURATION }} `
+            --runtime win-x64 `
+            --self-contained true `
+            -p:Platform=x64 `
+            -p:WindowsPackageType=None `
+            -p:PublishSingleFile=false `
+            -p:Version=${{ steps.version.outputs.VERSION }} `
+            --output publish/portable-x64
+
+      - name: Copy scripts into portable package
+        shell: pwsh
+        run: |
+          Copy-Item tools/install.ps1   publish/portable-x64/install.ps1   -ErrorAction SilentlyContinue
+          Copy-Item tools/uninstall.ps1 publish/portable-x64/uninstall.ps1 -ErrorAction SilentlyContinue
+          Copy-Item README.md           publish/portable-x64/README.md      -ErrorAction SilentlyContinue
+
+      - name: Create ZIP archive
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.VERSION }}"
+          $zipName = "NetOverseer-$version-portable-x64.zip"
+          New-Item -ItemType Directory -Force -Path artifacts | Out-Null
+          Compress-Archive -Path publish/portable-x64/* -DestinationPath "artifacts/$zipName" -Force
+          echo "ZIP_NAME=$zipName" >> $env:GITHUB_OUTPUT
+        id: zip
+
+      - name: Upload portable ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portable-zip
+          path: artifacts/*.zip
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 3: Build MSIX package
+  # ─────────────────────────────────────────────────────────────────
+  build-msix:
+    name: Build MSIX Package
+    runs-on: windows-latest
+    needs: build-and-test
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+      - name: Restore NuGet packages
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+      - name: Determine version
+        id: version
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -match '^refs/tags/v(.+)$') {
+            $version = $Matches[1]
+          } else {
+            $sha = $env:GITHUB_SHA.Substring(0, 7)
+            $version = "0.0.0-dev.$sha"
+          }
+          # MSIX version must be 4-part numeric (Major.Minor.Patch.Build)
+          # Strip pre-release suffix (e.g. "-dev.abc1234") before splitting
+          $semver = $version -replace '-.*$', ''
+          $parts = $semver.Split('.')
+          while ($parts.Count -lt 4) { $parts += '0' }
+          $msixVersion = $parts[0..3] -join '.'
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "MSIX_VERSION=$msixVersion" >> $env:GITHUB_OUTPUT
+
+      - name: Create self-signed certificate (CI only)
+        shell: pwsh
+        run: |
+          # Generate a throwaway password at runtime so no secret is committed.
+          $pfxPassword = [System.Guid]::NewGuid().ToString('N')
+          echo "::add-mask::$pfxPassword"
+          echo "PFX_PASSWORD=$pfxPassword" >> $env:GITHUB_ENV
+
+          $cert = New-SelfSignedCertificate `
+            -Subject "CN=NetOverseer" `
+            -KeyUsage DigitalSignature `
+            -FriendlyName "NetOverseer CI Self-Signed" `
+            -CertStoreLocation "Cert:\CurrentUser\My" `
+            -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3", "2.5.29.19={text}")
+          $thumbprint = $cert.Thumbprint
+          echo "CERT_THUMBPRINT=$thumbprint" >> $env:GITHUB_ENV
+          # Export PFX for MSBuild using the runtime-generated password.
+          $pwd = ConvertTo-SecureString -String $pfxPassword -Force -AsPlainText
+          Export-PfxCertificate -Cert "Cert:\CurrentUser\My\$thumbprint" `
+            -FilePath ci-signing.pfx `
+            -Password $pwd
+
+      # NOTE: The self-signed certificate above is for CI builds only and will
+      # trigger SmartScreen warnings for end users. For published releases,
+      # provide a real code-signing certificate via repository secrets
+      # (MSIX_CERT_BASE64 + MSIX_CERT_PASSWORD) and replace the step above.
+
+      - name: Build MSIX
+        run: |
+          msbuild ${{ env.APP_PROJECT }} `
+            /t:Publish `
+            /p:Configuration=${{ env.CONFIGURATION }} `
+            "/p:Platform=${{ env.PLATFORM }}" `
+            /p:WindowsPackageType=MSIX `
+            /p:AppxPackageSigningEnabled=true `
+            /p:PackageCertificateThumbprint=${{ env.CERT_THUMBPRINT }} `
+            /p:PackageCertificateKeyFile=ci-signing.pfx `
+            /p:PackageCertificatePassword=${{ env.PFX_PASSWORD }} `
+            /p:Version=${{ steps.version.outputs.MSIX_VERSION }} `
+            /p:AppxPackageDir=artifacts\msix\ `
+            /p:GenerateAppxPackageOnBuild=true `
+            /p:AppxBundle=Never
+
+      - name: Upload MSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: msix-package
+          path: artifacts/msix/**/*.msix
+
+  # ─────────────────────────────────────────────────────────────────
+  # Job 4: GitHub Release (only on version tags)
+  # ─────────────────────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [ build-portable, build-msix ]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download portable ZIP
+        uses: actions/download-artifact@v4
+        with:
+          name: portable-zip
+          path: release-assets/
+
+      - name: Download MSIX
+        uses: actions/download-artifact@v4
+        with:
+          name: msix-package
+          path: release-assets/
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          VERSION="${{ steps.version.outputs.VERSION }}"
+          cat <<'EOF' > release-notes.md
+          ## NetOverseer v${{ steps.version.outputs.VERSION }}
+
+          ### Downloads
+          | Package | Description |
+          |---------|-------------|
+          | `NetOverseer-*-portable-x64.zip` | Portable ZIP – no installation needed, extract and run |
+          | `*.msix` | MSIX package – installs via Windows Package Manager |
+
+          ### System Requirements
+          - Windows 10 21H2 (Build 19044) or newer
+          - x64 processor
+          - Administrator privileges (for network capture and firewall management)
+
+          ### Installation (Portable)
+          1. Extract the ZIP to any folder
+          2. Right-click `install.ps1` → Run with PowerShell (as Administrator)
+             – or run `NetOverseer.App.exe` directly (no install required)
+
+          ### Installation (MSIX)
+          ```powershell
+          # Install self-signed cert first (development builds only)
+          Add-AppxPackage NetOverseer-*.msix
+          ```
+
+          > **Note:** This is a development/beta release signed with a self-signed certificate.
+          > Production releases will use an EV Code Signing certificate.
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: NetOverseer v${{ steps.version.outputs.VERSION }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+          files: release-assets/**

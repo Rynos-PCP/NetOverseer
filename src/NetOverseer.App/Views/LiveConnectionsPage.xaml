@@ -1,0 +1,665 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetOverseer.App.Views.LiveConnectionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:NetOverseer.App.ViewModels">
+
+    <Page.Resources>
+        <!-- Singleton-Layout für Spaltenbreiten – Header und Zeilen-Template
+             binden an dieselbe Instanz, damit Drag-Resize auf alle Zeilen wirkt. -->
+        <vm:ColumnLayoutSource x:Key="ColumnLayout"/>
+
+        <!-- 8 px breiter Splitter (Border + ManipulationDelta) mit zentrierter Trennlinie.
+             Border wird statt Thumb genutzt, weil Thumb.DragDelta in WinUI 3 nicht
+             zuverlässig feuert. -->
+        <Style x:Key="ColumnSplitterStyle" TargetType="Border">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ManipulationMode" Value="TranslateX"/>
+        </Style>
+
+        <!-- Slide-In: Panel von rechts (X 460 → 0), Backdrop einblenden -->
+        <Storyboard x:Key="AppRulesSlideIn">
+            <DoubleAnimation Storyboard.TargetName="AppRulesTransform"
+                             Storyboard.TargetProperty="X"
+                             To="0" Duration="0:0:0.25">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="AppRulesBackdrop"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0.45" Duration="0:0:0.2"/>
+        </Storyboard>
+
+        <!-- Slide-Out: Panel nach rechts schieben, Backdrop ausblenden -->
+        <Storyboard x:Key="AppRulesSlideOut">
+            <DoubleAnimation Storyboard.TargetName="AppRulesTransform"
+                             Storyboard.TargetProperty="X"
+                             To="460" Duration="0:0:0.2">
+                <DoubleAnimation.EasingFunction>
+                    <CubicEase EasingMode="EaseIn"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="AppRulesBackdrop"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0" Duration="0:0:0.15"/>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- GeoDb-Warnung -->
+            <RowDefinition Height="Auto"/>  <!-- Filter-Leiste -->
+            <RowDefinition Height="36"/>    <!-- Spalten-Kopfzeile -->
+            <RowDefinition Height="*"/>     <!-- Verbindungsliste -->
+        </Grid.RowDefinitions>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             GeoLite2-Datenbank fehlt – InfoBar
+             ═══════════════════════════════════════════════════════════ -->
+        <InfoBar
+            Grid.Row="0"
+            IsOpen="{x:Bind ViewModel.ShowGeoDbMissingWarning, Mode=OneWay}"
+            IsClosable="True"
+            Severity="Warning"
+            Title="Geolocation nicht verfügbar"
+            Message="GeoLite2-Datenbank wurde nicht gefunden. Länder und Standortinformationen können nicht angezeigt werden. Laden Sie die Datenbank in den Einstellungen herunter."/>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Filter-Leiste – StackPanel mit konsistentem Abstand
+             ═══════════════════════════════════════════════════════════ -->
+        <Grid Grid.Row="1"
+              Padding="12,8,12,8"
+              BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+              BorderThickness="0,0,0,1">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Links: Filter-Steuerelemente mit gleichmäßigem Abstand -->
+            <StackPanel
+                Grid.Column="0"
+                Orientation="Horizontal"
+                Spacing="8"
+                VerticalAlignment="Center">
+
+                <AutoSuggestBox
+                    Width="320"
+                    PlaceholderText="Suche nach App, IP oder Hostname …"
+                    QueryIcon="Find"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <ToggleButton
+                    MinWidth="56"
+                    Content="TCP"
+                    VerticalAlignment="Center"
+                    IsChecked="{x:Bind ViewModel.FilterTcpActive, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ToggleTcpFilterCommand}"/>
+
+                <ToggleButton
+                    MinWidth="56"
+                    Content="UDP"
+                    VerticalAlignment="Center"
+                    IsChecked="{x:Bind ViewModel.FilterUdpActive, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ToggleUdpFilterCommand}"/>
+
+                <AppBarSeparator Margin="4,0"/>
+
+                <ToggleButton
+                    MinWidth="56"
+                    Content="IPv4"
+                    VerticalAlignment="Center"
+                    IsChecked="{x:Bind ViewModel.FilterIpV4Active, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ToggleIpV4FilterCommand}"
+                    ToolTipService.ToolTip="Nur IPv4-Verbindungen anzeigen (erneuter Klick zeigt wieder beide)"/>
+
+                <ToggleButton
+                    MinWidth="56"
+                    Content="IPv6"
+                    VerticalAlignment="Center"
+                    IsChecked="{x:Bind ViewModel.FilterIpV6Active, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ToggleIpV6FilterCommand}"
+                    ToolTipService.ToolTip="Nur IPv6-Verbindungen anzeigen (erneuter Klick zeigt wieder beide)"/>
+
+                <ToggleButton
+                    Content="&#x1FA9F; Telemetrie"
+                    VerticalAlignment="Center"
+                    IsChecked="{x:Bind ViewModel.FilterTelemetryActive, Mode=OneWay}"
+                    Command="{x:Bind ViewModel.ToggleTelemetryFilterCommand}"
+                    ToolTipService.ToolTip="Nur Microsoft-Telemetrie-Verbindungen anzeigen"/>
+
+                <AppBarSeparator Margin="4,0"/>
+
+                <Button
+                    Content="Filter zurücksetzen"
+                    VerticalAlignment="Center"
+                    Command="{x:Bind ViewModel.ClearFilterCommand}"/>
+
+                <!-- Erweiterte Filter (Flyout-Popup mit Status/Reputation/Land/Port/Ignore) -->
+                <Button
+                    VerticalAlignment="Center"
+                    ToolTipService.ToolTip="Detaillierte Filter (Status, Reputation, Land, Port, Ignorieren …)">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <FontIcon Glyph="&#xE71C;" FontSize="13"/>
+                        <TextBlock Text="Erweiterte Filter" VerticalAlignment="Center"/>
+                        <!-- Aktiv-Punkt: leuchtet wenn ein Flyout-Filter gesetzt ist -->
+                        <Ellipse
+                            Width="8" Height="8"
+                            VerticalAlignment="Center"
+                            Fill="{ThemeResource SystemAccentColorLight2}"
+                            Visibility="{x:Bind ViewModel.IsExtendedFilterActive, Mode=OneWay}"/>
+                    </StackPanel>
+
+                    <Button.Flyout>
+                        <Flyout Placement="Bottom">
+                            <Flyout.FlyoutPresenterStyle>
+                                <Style TargetType="FlyoutPresenter">
+                                    <Setter Property="MaxWidth" Value="640"/>
+                                    <Setter Property="MaxHeight" Value="560"/>
+                                </Style>
+                            </Flyout.FlyoutPresenterStyle>
+
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Auto">
+                                <StackPanel Spacing="14" MinWidth="420">
+
+                                    <TextBlock
+                                        Text="Erweiterte Filter"
+                                        Style="{ThemeResource SubtitleTextBlockStyle}"/>
+
+                                    <!-- Verbindungs-Status -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Verbindungs-Status" FontWeight="SemiBold"/>
+                                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.StateFilters}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Orientation="Vertical" Spacing="2"/>
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:FilterOptionViewModel">
+                                                    <CheckBox
+                                                        Content="{x:Bind Label}"
+                                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}"/>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+
+                                    <!-- Reputation -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Reputation" FontWeight="SemiBold"/>
+                                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.ReputationFilters}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Orientation="Vertical" Spacing="2"/>
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:FilterOptionViewModel">
+                                                    <CheckBox
+                                                        Content="{x:Bind Label}"
+                                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}"/>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+
+                                    <!-- Infrastruktur -->
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Infrastruktur" FontWeight="SemiBold"/>
+                                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.InfrastructureFilters}">
+                                            <ItemsRepeater.Layout>
+                                                <StackLayout Orientation="Vertical" Spacing="2"/>
+                                            </ItemsRepeater.Layout>
+                                            <ItemsRepeater.ItemTemplate>
+                                                <DataTemplate x:DataType="vm:FilterOptionViewModel">
+                                                    <CheckBox
+                                                        Content="{x:Bind Label}"
+                                                        IsChecked="{x:Bind IsSelected, Mode=TwoWay}"/>
+                                                </DataTemplate>
+                                            </ItemsRepeater.ItemTemplate>
+                                        </ItemsRepeater>
+                                    </StackPanel>
+
+                                    <!-- Frei-Text-Filter -->
+                                    <StackPanel Spacing="6">
+                                        <TextBox
+                                            Header="Länder-Codes (kommagetrennt, z. B. DE, US)"
+                                            PlaceholderText="z. B. DE, US, IE"
+                                            Text="{x:Bind ViewModel.CountryCodeFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBox
+                                            Header="Ports (kommagetrennt)"
+                                            PlaceholderText="z. B. 80, 443, 8080"
+                                            Text="{x:Bind ViewModel.PortFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                        <TextBox
+                                            Header="Prozesse ignorieren (Teilstring, kommagetrennt)"
+                                            PlaceholderText="z. B. svchost, OneDrive"
+                                            Text="{x:Bind ViewModel.IgnoreProcessFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </StackPanel>
+
+                                    <!-- Schnell-Toggles -->
+                                    <ToggleSwitch
+                                        Header="Private/Loopback-Adressen ausblenden"
+                                        OffContent="Anzeigen"
+                                        OnContent="Ausblenden"
+                                        IsOn="{x:Bind ViewModel.HidePrivateAddresses, Mode=TwoWay}"/>
+
+                                    <!-- Aktions-Leiste -->
+                                    <Grid Margin="0,4,0,0">
+                                        <Button
+                                            HorizontalAlignment="Left"
+                                            Content="Erweiterte zurücksetzen"
+                                            Command="{x:Bind ViewModel.ResetExtendedFiltersCommand}"/>
+                                    </Grid>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+
+            <!-- Rechts: Verbindungszähler -->
+            <TextBlock
+                Grid.Column="1"
+                Text="{x:Bind ViewModel.ConnectionCountText, Mode=OneWay}"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                FontSize="12"/>
+        </Grid>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Spalten-Kopfzeile (resizable über Thumb-Splitter)
+             ═══════════════════════════════════════════════════════════ -->
+        <Border
+            Grid.Row="2"
+            Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
+            BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1">
+
+            <Grid Margin="12,0,12,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="{Binding Layout.AppWidth,        Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.ProtocolWidth,   Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.LocalWidth,      Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.RemoteWidth,     Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.HostnameWidth,   Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.CountryWidth,    Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.ReputationWidth, Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                    <ColumnDefinition Width="8"/>
+                    <ColumnDefinition Width="{Binding Layout.StateWidth,      Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="1"  Text="Anwendung"  Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="2"  Tag="AppWidth"        Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="3"  Text="Proto"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="4"  Tag="ProtocolWidth"   Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="5"  Text="Lokal"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="6"  Tag="LocalWidth"      Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="7"  Text="Remote"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="8"  Tag="RemoteWidth"     Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="9"  Text="Hostname"   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="10" Tag="HostnameWidth"   Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="11" Text="Land"       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="12" Tag="CountryWidth"    Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="13" Text="Reputation" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <Border Grid.Column="14" Tag="ReputationWidth" Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
+                    <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Border>
+
+                <TextBlock Grid.Column="15" Text="Status"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+            </Grid>
+        </Border>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Verbindungsliste
+             ═══════════════════════════════════════════════════════════ -->
+        <ListView
+            Grid.Row="3"
+            x:Name="ConnectionList"
+            ItemsSource="{x:Bind ViewModel.FilteredConnections, Mode=OneWay}"
+            SelectionMode="Single"
+            IsItemClickEnabled="False"
+            ContextRequested="ConnectionList_ContextRequested"
+            DoubleTapped="ConnectionList_DoubleTapped">
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="MinHeight" Value="38"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="BorderBrush" Value="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsStackPanel AreStickyGroupHeadersEnabled="False"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="vm:ConnectionItemViewModel">
+                    <Grid
+                        Margin="12,0,12,0"
+                        Height="36"
+                        Opacity="{x:Bind ItemOpacity, Mode=OneWay}"
+                        Background="{x:Bind RowBackground, Mode=OneWay}">
+
+                        <!-- Spalten-Definitionen synchron zum Header. Die 8 px Splitter-
+                             Spalten bleiben in den Zeilen leer und richten die Zellen aus. -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="{Binding Layout.AppWidth,        Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.ProtocolWidth,   Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.LocalWidth,      Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.RemoteWidth,     Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.HostnameWidth,   Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.CountryWidth,    Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.ReputationWidth, Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                            <ColumnDefinition Width="8"/>
+                            <ColumnDefinition Width="{Binding Layout.StateWidth,      Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image
+                            Grid.Column="0"
+                            Source="{x:Bind AppIcon, Mode=OneWay}"
+                            Width="20" Height="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"/>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{x:Bind ProcessDisplayName, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            TextTrimming="CharacterEllipsis"
+                            FontSize="13"/>
+
+                        <TextBlock
+                            Grid.Column="3"
+                            Text="{x:Bind ProtocolText}"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                        <TextBlock
+                            Grid.Column="5"
+                            Text="{x:Bind LocalAddress, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontFamily="Cascadia Code,Consolas,Courier New"
+                            FontSize="11"
+                            TextTrimming="CharacterEllipsis"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                        <TextBlock
+                            Grid.Column="7"
+                            Text="{x:Bind RemoteAddress, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontFamily="Cascadia Code,Consolas,Courier New"
+                            FontSize="11"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="9"
+                            Text="{x:Bind Hostname, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="11"
+                            Text="{x:Bind CountryDisplay, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="13"
+                            Text="{x:Bind ReputationDisplay, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            TextTrimming="CharacterEllipsis"/>
+
+                        <TextBlock
+                            Grid.Column="15"
+                            Text="{x:Bind StateDisplay, Mode=OneWay}"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             Slide-In-Panel: Firewall-Regeln der ausgewählten App
+             (überdeckt Header + Liste, gleitet von rechts ein)
+             ═══════════════════════════════════════════════════════════ -->
+
+        <!-- Halbtransparenter Backdrop – schließt das Panel bei Klick -->
+        <Border x:Name="AppRulesBackdrop"
+                Grid.Row="2" Grid.RowSpan="2"
+            Canvas.ZIndex="1"
+                Background="#80000000"
+                Opacity="0"
+                IsHitTestVisible="False"
+                Tapped="AppRulesBackdrop_Tapped"/>
+
+        <!-- Eigentliches Blade -->
+        <Border x:Name="AppRulesPanel"
+                Grid.Row="2" Grid.RowSpan="2"
+            Canvas.ZIndex="2"
+                HorizontalAlignment="Right"
+                Width="460"
+                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                BorderThickness="1,0,0,0"
+                IsHitTestVisible="False">
+            <Border.Shadow>
+                <ThemeShadow/>
+            </Border.Shadow>
+            <Border.RenderTransform>
+                <TranslateTransform x:Name="AppRulesTransform" X="460"/>
+            </Border.RenderTransform>
+
+            <Grid RowDefinitions="Auto,Auto,*">
+                <Border Grid.RowSpan="3"
+                        Background="{ThemeResource SystemControlAcrylicWindowBrush}"
+                        Opacity="0.9"/>
+
+                <!-- Kopfzeile -->
+                <Grid Grid.Row="0"
+                      Padding="16,12,8,12"
+                      BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                      BorderThickness="0,0,0,1"
+                      ColumnDefinitions="*,Auto,Auto">
+                    <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="Firewall-Regeln"
+                                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <TextBlock Text="{x:Bind ViewModel.AppFirewallRules.AppName, Mode=OneWay}"
+                                   Style="{ThemeResource CaptionTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="1"
+                            Style="{ThemeResource SubtleButtonStyle}"
+                            ToolTipService.ToolTip="Aktualisieren"
+                            Command="{x:Bind ViewModel.AppFirewallRules.RefreshCommand}">
+                        <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                    </Button>
+
+                    <Button Grid.Column="2"
+                            Style="{ThemeResource SubtleButtonStyle}"
+                            ToolTipService.ToolTip="Schließen"
+                            Command="{x:Bind ViewModel.AppFirewallRules.CloseCommand}">
+                        <FontIcon Glyph="&#xE711;" FontSize="14"/>
+                    </Button>
+                </Grid>
+
+                <!-- Meta-Zeile -->
+                <Grid Grid.Row="1"
+                      Padding="16,10"
+                      ColumnDefinitions="*,Auto"
+                      Background="{ThemeResource SubtleFillColorTransparentBrush}">
+                    <StackPanel Grid.Column="0" Spacing="4">
+                        <TextBlock Text="{x:Bind ViewModel.AppFirewallRules.AppPath, Mode=OneWay}"
+                                   FontFamily="Consolas"
+                                   FontSize="11"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                    <TextBlock Grid.Column="1"
+                               Text="{x:Bind ViewModel.AppFirewallRules.RuleCountText, Mode=OneWay}"
+                               VerticalAlignment="Center"
+                               Style="{ThemeResource CaptionTextBlockStyle}"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                </Grid>
+
+                <!-- Inhalt -->
+                <Grid Grid.Row="2">
+                    <!-- Lade-Indikator -->
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="10"
+                                Visibility="{x:Bind ViewModel.AppFirewallRules.IsLoading, Mode=OneWay}">
+                        <ProgressRing IsActive="True" Width="36" Height="36"/>
+                        <TextBlock Text="Lade Firewall-Regeln …"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <!-- Leerer Zustand -->
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                MaxWidth="320"
+                                Spacing="10"
+                                Visibility="{x:Bind ViewModel.AppFirewallRules.HasNoRules, Mode=OneWay}">
+                        <FontIcon Glyph="&#xE946;" FontSize="28"
+                                  Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Keine Firewall-Regeln gefunden"
+                                   Style="{ThemeResource BodyStrongTextBlockStyle}"
+                                   HorizontalAlignment="Center"/>
+                        <TextBlock Text="Für diese Anwendung sind in der Windows-Firewall keine Regeln hinterlegt."
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+
+                    <!-- Liste -->
+                    <ListView ItemsSource="{x:Bind ViewModel.AppFirewallRules.Rules, Mode=OneWay}"
+                              SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="vm:FirewallRuleItemViewModel">
+                                <Grid Padding="16,10"
+                                      RowDefinitions="Auto,Auto"
+                                      ColumnDefinitions="20,*,Auto,Auto"
+                                      BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}"
+                                      BorderThickness="0,0,0,1">
+                                    <!-- Richtungs-Icon -->
+                                    <FontIcon Grid.Column="0" Grid.RowSpan="2"
+                                              Glyph="{x:Bind DirectionGlyph}"
+                                              FontSize="13"
+                                              VerticalAlignment="Center"
+                                              ToolTipService.ToolTip="{x:Bind DirectionTooltip}"
+                                              Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                    <!-- Regelname -->
+                                    <TextBlock Grid.Column="1" Grid.Row="0"
+                                               Text="{x:Bind DisplayName}"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTipService.ToolTip="{x:Bind DisplayName}"/>
+
+                                    <!-- Detail-Zeile: Aktion · Protokoll · Ports/Adresse -->
+                                    <StackPanel Grid.Column="1" Grid.Row="1"
+                                                Orientation="Horizontal"
+                                                Spacing="6"
+                                                Margin="0,4,0,0">
+                                        <Border Background="{x:Bind ActionChipBackground}"
+                                                CornerRadius="4"
+                                                Padding="6,1">
+                                            <TextBlock Text="{x:Bind ActionDisplay}"
+                                                       Foreground="{x:Bind ActionChipForeground}"
+                                                       FontSize="10"
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+                                        <TextBlock Text="{x:Bind ProtocolDisplay}"
+                                                   FontSize="11"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind RemoteAddressDisplay}"
+                                                   FontSize="11"
+                                                   FontFamily="Consolas"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+
+                                    <!-- Aktiv-Toggle -->
+                                    <ToggleSwitch Grid.Column="2" Grid.RowSpan="2"
+                                                  IsOn="{x:Bind IsEnabled, Mode=TwoWay}"
+                                                  OnContent=""
+                                                  OffContent=""
+                                                  MinWidth="0"
+                                                  VerticalAlignment="Center"/>
+
+                                    <!-- Löschen -->
+                                    <Button Grid.Column="3" Grid.RowSpan="2"
+                                            Command="{x:Bind RemoveCommand}"
+                                            Style="{StaticResource SubtleButtonStyle}"
+                                            VerticalAlignment="Center"
+                                            ToolTipService.ToolTip="Regel entfernen">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="12"/>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Grid>
+
+            <!-- Slide-In/Out wird code-behind über die Storyboards
+                 AppRulesSlideIn / AppRulesSlideOut gesteuert. -->
+        </Border>
+    </Grid>
+</Page>

@@ -1,0 +1,374 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="NetOverseer.App.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style x:Key="SettingsCardStyle" TargetType="Border">
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock x:Uid="SettingsTitle" Grid.Row="0" Text="Einstellungen" Style="{StaticResource TitleTextBlockStyle}" Margin="24,16,24,8"/>
+
+        <!-- Pivot mit 6 Tabs -->
+        <Pivot Grid.Row="1" Margin="16,0,16,0">
+
+            <!-- Tab 1: Allgemein -->
+            <PivotItem x:Uid="Tab_General" Header="Allgemein">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_Language" Text="Sprache" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox SelectedIndex="{x:Bind ViewModel.LanguageIndex, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                    <ComboBoxItem x:Uid="Language_German" Content="Deutsch"/>
+                                    <ComboBoxItem x:Uid="Language_English" Content="English"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_Theme" Text="Design" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ComboBox SelectedIndex="{x:Bind ViewModel.ThemeIndex, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                    <ComboBoxItem x:Uid="Theme_System" Content="Systemstandard"/>
+                                    <ComboBoxItem x:Uid="Theme_Light" Content="Hell"/>
+                                    <ComboBoxItem x:Uid="Theme_Dark" Content="Dunkel"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_StartWithWindows" Text="Mit Windows starten" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ToggleSwitch x:Uid="StartWithWindowsSwitch" IsOn="{x:Bind ViewModel.StartWithWindows, Mode=TwoWay}" OnContent="Aktiv" OffContent="Inaktiv"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_DataRetention" Text="Datenspeicherung" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="DataRetention_Desc" Text="Wie lange sollen Verbindungsdaten gespeichert werden?" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ComboBox SelectedIndex="{x:Bind ViewModel.DataRetentionIndex, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                    <ComboBoxItem x:Uid="Retention_7Days" Content="7 Tage"/>
+                                    <ComboBoxItem x:Uid="Retention_30Days" Content="30 Tage"/>
+                                    <ComboBoxItem x:Uid="Retention_90Days" Content="90 Tage"/>
+                                    <ComboBoxItem x:Uid="Retention_Unlimited" Content="Unbegrenzt"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 2: Überwachung -->
+            <PivotItem x:Uid="Tab_Monitoring" Header="Überwachung">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <!-- Capture-Steuerung (Start / Stop / Neustart) -->
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Aufnahme-Steuerung" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock Text="Die Aufnahme wird beim Programmstart automatisch aktiviert. Hier kann sie bei Bedarf manuell gesteuert werden."
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+
+                                <!-- Statusanzeige -->
+                                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                    <Border CornerRadius="12"
+                                            Padding="12,5"
+                                            VerticalAlignment="Center"
+                                            Background="{x:Bind CaptureViewModel.StatusBrush, Mode=OneWay}">
+                                        <TextBlock Text="{x:Bind CaptureViewModel.StatusText, Mode=OneWay}"
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                </StackPanel>
+
+                                <!-- Buttons -->
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Command="{x:Bind CaptureViewModel.StartCaptureCommand}"
+                                            IsEnabled="{x:Bind CaptureViewModel.IsNotCapturing, Mode=OneWay}"
+                                            Style="{StaticResource AccentButtonStyle}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon Glyph="&#xE768;" FontSize="14"/>
+                                            <TextBlock Text="Starten"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Command="{x:Bind CaptureViewModel.StopCaptureCommand}"
+                                            IsEnabled="{x:Bind CaptureViewModel.IsCapturing, Mode=OneWay}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon Glyph="&#xE71A;" FontSize="14"/>
+                                            <TextBlock Text="Stoppen"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Command="{x:Bind CaptureViewModel.RestartCaptureCommand}">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <FontIcon Glyph="&#xE72C;" FontSize="14"/>
+                                            <TextBlock Text="Neu starten"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_CaptureMethod" Text="Erfassungsmethode" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="CaptureMethod_Desc" Text="Methode zur Netzwerkverbindungserfassung" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <RadioButtons SelectedIndex="{x:Bind ViewModel.CaptureMethodIndex, Mode=TwoWay}">
+                                    <RadioButton x:Uid="CaptureMethod_IpHelper" Content="IP Helper API (Standard, keine Adminrechte)"/>
+                                    <RadioButton x:Uid="CaptureMethod_Wfp" Content="Windows Filtering Platform (WFP, erfordert Adminrechte)"/>
+                                </RadioButtons>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_PollingInterval" Text="Abfrageintervall" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock x:Uid="PollingInterval_Prefix" Text="Intervall: " VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.PollingIntervalMsDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <Slider Value="{x:Bind ViewModel.PollingIntervalMs, Mode=TwoWay}"
+                                        Minimum="250" Maximum="2000" StepFrequency="250"
+                                        IsEnabled="{x:Bind ViewModel.IsCaptureMethodIpHelper, Mode=OneWay}"
+                                        HorizontalAlignment="Stretch"/>
+                                <TextBlock x:Uid="PollingInterval_Hint" Text="Gilt nur für IP Helper API. WFP arbeitet ereignisgesteuert." Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_PrivateConnections" Text="Private Verbindungen anzeigen" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="PrivateConnections_Desc" Text="Verbindungen zu lokalen IP-Adressen (192.168.x.x, 10.x.x.x, etc.)" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ToggleSwitch x:Uid="PrivateConnectionsSwitch" IsOn="{x:Bind ViewModel.ShowPrivateConnections, Mode=TwoWay}" OnContent="Sichtbar" OffContent="Ausgeblendet"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_IgnoredProcesses" Text="Ignorierte Prozesse" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="IgnoredProcesses_Desc" Text="Prozesse, die von der Überwachung ausgeschlossen werden (ein Prozess pro Zeile)." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBox x:Uid="IgnoredProcesses_Placeholder"
+                                         Text="{x:Bind ViewModel.IgnoredProcessesText, Mode=TwoWay}"
+                                         AcceptsReturn="True"
+                                         Height="96"
+                                         TextWrapping="Wrap"
+                                         PlaceholderText="z.B. svchost.exe"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 3: Reputation -->
+            <PivotItem x:Uid="Tab_Reputation" Header="Reputation">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_OfflineMode" Text="Offline-Modus" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="OfflineMode_Desc" Text="Keine externen Anfragen für Reputationsdaten. Nur lokale Blocklisten werden verwendet." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ToggleSwitch x:Uid="OfflineModeSwitch" IsOn="{x:Bind ViewModel.OfflineMode, Mode=TwoWay}" OnContent="Aktiv" OffContent="Inaktiv"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_AbuseIpDb" Text="AbuseIPDB API-Schlüssel" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="AbuseIpDb_Desc" Text="Kostenloser API-Schlüssel unter abuseipdb.com/account/api" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <PasswordBox x:Name="AbuseIpDbPasswordBox"
+                                             x:Uid="AbuseIpDb_Placeholder"
+                                             PasswordChanged="AbuseIpDbPasswordBox_PasswordChanged"
+                                             PlaceholderText="API-Schlüssel eingeben"
+                                             IsEnabled="{x:Bind ViewModel.IsOfflineModeDisabled, Mode=OneWay}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock x:Uid="AbuseIpDb_DailyLimit" Text="Tägliches Limit: " VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.MaxDailyRequestsDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <Slider Value="{x:Bind ViewModel.MaxDailyAbuseIpDbRequests, Mode=TwoWay}"
+                                        Minimum="100" Maximum="5000" StepFrequency="100"
+                                        IsEnabled="{x:Bind ViewModel.IsOfflineModeDisabled, Mode=OneWay}"
+                                        HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_MaxMind" Text="MaxMind GeoIP2 Lizenzschlüssel" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="MaxMind_Desc" Text="Für genaue Geolokalisierung. Kostenloser Account unter maxmind.com" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <PasswordBox x:Name="MaxMindPasswordBox"
+                                             x:Uid="MaxMind_Placeholder"
+                                             PasswordChanged="MaxMindPasswordBox_PasswordChanged"
+                                             PlaceholderText="Lizenzschlüssel eingeben"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_Blocklist" Text="Blocklisten-Aktualisierung" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock x:Uid="Blocklist_Interval" Text="Intervall: " VerticalAlignment="Center"/>
+                                    <TextBlock Text="{x:Bind ViewModel.BlocklistIntervalDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                </StackPanel>
+                                <Slider Value="{x:Bind ViewModel.BlocklistUpdateIntervalDays, Mode=TwoWay}"
+                                        Minimum="1" Maximum="30" StepFrequency="1"
+                                        IsEnabled="{x:Bind ViewModel.IsOfflineModeDisabled, Mode=OneWay}"
+                                        HorizontalAlignment="Stretch"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 4: Benachrichtigungen -->
+            <PivotItem x:Uid="Tab_Notifications" Header="Benachrichtigungen">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_NotifyUnknown" Text="Neue unbekannte Verbindungen" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ToggleSwitch x:Uid="NotifyUnknownSwitch" IsOn="{x:Bind ViewModel.NotifyOnNewUnknownConnection, Mode=TwoWay}" OnContent="Benachrichtigung aktiv" OffContent="Keine Benachrichtigung"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_NotifyLowRep" Text="Niedrige Reputation" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ToggleSwitch x:Uid="NotifyLowRepSwitch" IsOn="{x:Bind ViewModel.NotifyOnLowReputation, Mode=TwoWay}" OnContent="Benachrichtigung aktiv" OffContent="Keine Benachrichtigung"/>
+                                <StackPanel Spacing="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock x:Uid="NotifyLowRep_Threshold" Text="Schwellwert: " VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Bind ViewModel.MinRepAlertDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <Slider Value="{x:Bind ViewModel.MinReputationScoreForAlert, Mode=TwoWay}"
+                                            Minimum="0" Maximum="100" StepFrequency="5"
+                                            IsEnabled="{x:Bind ViewModel.NotifyOnLowReputation, Mode=OneWay}"
+                                            HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_NotifyDns" Text="Verdächtige DNS-Anfragen" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <ToggleSwitch x:Uid="NotifyDnsSwitch" IsOn="{x:Bind ViewModel.NotifyOnSuspiciousDns, Mode=TwoWay}" OnContent="Benachrichtigung aktiv" OffContent="Keine Benachrichtigung"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_QuietHours" Text="Ruhezeiten" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="QuietHours_Desc" Text="Keine Benachrichtigungen während der Ruhezeit." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ToggleSwitch x:Uid="QuietHoursSwitch" IsOn="{x:Bind ViewModel.QuietHoursEnabled, Mode=TwoWay}" OnContent="Aktiv" OffContent="Inaktiv"/>
+                                <StackPanel Spacing="8">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock x:Uid="QuietHours_Start" Text="Beginn: " VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Bind ViewModel.QuietHoursStartDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <Slider Value="{x:Bind ViewModel.QuietHoursStartHour, Mode=TwoWay}"
+                                            Minimum="0" Maximum="23" StepFrequency="1"
+                                            IsEnabled="{x:Bind ViewModel.QuietHoursEnabled, Mode=OneWay}"
+                                            HorizontalAlignment="Stretch"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <TextBlock x:Uid="QuietHours_End" Text="Ende: " VerticalAlignment="Center"/>
+                                        <TextBlock Text="{x:Bind ViewModel.QuietHoursEndDisplay, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <Slider Value="{x:Bind ViewModel.QuietHoursEndHour, Mode=TwoWay}"
+                                            Minimum="0" Maximum="23" StepFrequency="1"
+                                            IsEnabled="{x:Bind ViewModel.QuietHoursEnabled, Mode=OneWay}"
+                                            HorizontalAlignment="Stretch"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 5: Autostart -->
+            <PivotItem x:Uid="Tab_Autostart" Header="Autostart">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE7BA;" Foreground="{ThemeResource SystemFillColorCautionBrush}"/>
+                                    <TextBlock x:Uid="Section_StartupMonitor" Text="Überwachung beim Systemstart" Style="{StaticResource BodyStrongTextBlockStyle}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                                <TextBlock x:Uid="StartupMonitor_Desc" Text="Die Netzwerküberwachung wird automatisch beim Windows-Start gestartet. Je nach gewählter Erfassungsmethode können erweiterte Rechte erforderlich sein." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ToggleSwitch x:Uid="StartupMonitorSwitch" IsOn="{x:Bind ViewModel.IsStartupMonitoringEnabled, Mode=TwoWay}" OnContent="Aktiv" OffContent="Inaktiv"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 6: Speicherung -->
+            <PivotItem x:Uid="Tab_Storage" Header="Speicherung">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_DataLocation" Text="Datenspeicherort" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="DataLocation_Desc" Text="Alle Daten werden lokal im AppData-Verzeichnis des Benutzers gespeichert." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <Button x:Uid="OpenDataFolder_Button" Command="{x:Bind ViewModel.OpenDataFolderCommand}" Content="Datenordner öffnen"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_DataSecurity" Text="Datensicherheit" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="DataSecurity_Desc" Text="API-Schlüssel werden in der Konfigurationsdatei gespeichert. Das Verzeichnis %AppData% ist durch Windows-ACL benutzerspezifisch geschützt und nur für den aktuellen Benutzer zugänglich." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+        </Pivot>
+
+        <!-- Speichern-Leiste -->
+        <Border Grid.Row="2" Padding="16,8" BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <Button x:Uid="SaveSettings_Button"
+                        Command="{x:Bind ViewModel.SaveSettingsCommand}"
+                        Content="Einstellungen speichern"
+                        Style="{StaticResource AccentButtonStyle}"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Page>

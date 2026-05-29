@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NetOverseer.App/NetOverseer.App.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/NetOverseer.Capture/NetOverseer.Capture.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/NetOverseer.BootMonitor/NetOverseer.BootMonitor.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/NetOverseer.Core/NetOverseer.Core.csproj" />
+    <Project Path="src/NetOverseer.Data/NetOverseer.Data.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/NetOverseer.Capture.Tests/NetOverseer.Capture.Tests.csproj" />
+    <Project Path="tests/NetOverseer.Core.Tests/NetOverseer.Core.Tests.csproj" />
+  </Folder>
+</Solution>
