@@ -232,21 +232,22 @@ public partial class App : Application
             var settings = _host!.Services.GetRequiredService<ISettingsService>().Load();
             var locService = _host.Services.GetRequiredService<ILocalizationService>();
 
-            // Sprache aus gespeicherten Einstellungen übernehmen
+            // Sprache aus gespeicherten Einstellungen übernehmen. Englisch ist
+            // Standard und Fallback, falls nichts gespeichert ist.
             var langCode = settings.Language switch
             {
-                "en" => "en-US",
                 "de" => "de-DE",
-                _    => locService.CurrentLanguageCode   // System-Default beibehalten
+                _    => "en-US"
             };
 
-            // Prozess-UI-Sprache via Win32-API setzen – funktioniert in unpackaged Apps.
-            // WinRT ResourceLoader und x:Uid respektieren diese Einstellung.
-            // Muss VOR new MainWindow() aufgerufen werden, damit x:Uid richtig auflöst.
-            // Multi-String-Format: "en-US\0" → CLR-Marshaler fügt weitere \0 an → "en-US\0\0"
-            SetProcessPreferredUILanguages(MUI_LANGUAGE_NAME, langCode + "\0", out _);
+            // WICHTIG: Microsoft.Windows.Globalization.ApplicationLanguages
+            // (WinApp SDK) – NICHT die WinRT-Variante Windows.Globalization.
+            // Die WinApp-SDK-Variante funktioniert in unpackaged Apps (ab WinAppSDK
+            // 1.6) und steuert die x:Uid-/MRT-Auflösung. Muss VOR new MainWindow()
+            // gesetzt werden, damit die erste Seite bereits korrekt lokalisiert lädt.
+            Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = langCode;
 
-            // .NET-Kultur ebenfalls setzen (für managed Resources / string-Formatierung)
+            // .NET-Kultur ebenfalls setzen (für managed Resources / String-Formatierung).
             var culture = new System.Globalization.CultureInfo(langCode);
             System.Globalization.CultureInfo.DefaultThreadCurrentUICulture = culture;
             System.Globalization.CultureInfo.DefaultThreadCurrentCulture = culture;
@@ -258,20 +259,7 @@ public partial class App : Application
         {
             // Spracheinstellung unkritisch – App startet trotzdem mit System-Default,
             // Fehler aber wenigstens loggen damit Diagnose möglich ist.
-            Log.Warning(ex, "Konnte gespeicherte Sprache nicht anwenden – verwende System-Default.");
+            Log.Warning(ex, "Konnte gespeicherte Sprache nicht anwenden – verwende Standard (en-US).");
         }
     }
-
-    // SetProcessPreferredUILanguages setzt die Prozess-bevorzugten UI-Sprachen im Windows
-    // MUI-System. Erfordert keine Paketidentität und löst keinen FAIL_FAST aus.
-    // dwFlags: MUI_LANGUAGE_NAME (0x8) = Sprachnamen wie "en-US" verwenden.
-    // pwszLanguagesBuffer: Multi-String (null-separated, double-null-terminated).
-    private const uint MUI_LANGUAGE_NAME = 0x8;
-
-    [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true,
-        CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
-    private static extern bool SetProcessPreferredUILanguages(
-        uint dwFlags,
-        string? pwszLanguagesBuffer,
-        out uint pulNumLanguages);
 }

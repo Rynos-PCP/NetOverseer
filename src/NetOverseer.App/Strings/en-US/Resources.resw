@@ -83,6 +83,48 @@
   <data name="Tab_Storage.Header" xml:space="preserve">
     <value>Storage</value>
   </data>
+  <data name="Tab_Help.Header" xml:space="preserve">
+    <value>Help</value>
+  </data>
+  <data name="Section_HideGeoDbWarning.Text" xml:space="preserve">
+    <value>Hide GeoLite2 warning</value>
+  </data>
+  <data name="HideGeoDbWarning_Desc.Text" xml:space="preserve">
+    <value>Hides the notice shown when the GeoLite2 database was not found.</value>
+  </data>
+  <data name="HideGeoDbWarningSwitch.OnContent" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="HideGeoDbWarningSwitch.OffContent" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Help_Intro.Text" xml:space="preserve">
+    <value>Here you will find step-by-step guides for setting up optional features.</value>
+  </data>
+  <data name="Help_GeoTitle.Text" xml:space="preserve">
+    <value>Set up the GeoLite2 database (geolocation)</value>
+  </data>
+  <data name="Help_GeoIntro.Text" xml:space="preserve">
+    <value>To display country and location information for IP addresses, the free MaxMind GeoLite2 City database is required. For licensing reasons it is not bundled and must be installed manually once.</value>
+  </data>
+  <data name="Help_GeoStep1.Text" xml:space="preserve">
+    <value>1. Create a free MaxMind account at maxmind.com (GeoLite2 sign-up).</value>
+  </data>
+  <data name="Help_GeoStep2.Text" xml:space="preserve">
+    <value>2. In your MaxMind account, download the “GeoLite2 City” database in MaxMind DB (.mmdb) format and extract the archive.</value>
+  </data>
+  <data name="Help_GeoStep3.Text" xml:space="preserve">
+    <value>3. Copy the file “GeoLite2-City.mmdb” into the folder %AppData%\NetOverseer\geoip\ (the button below opens this folder).</value>
+  </data>
+  <data name="Help_GeoStep4.Text" xml:space="preserve">
+    <value>4. Restart NetOverseer. Optionally, you can enter a MaxMind license key on the “Reputation” tab so the database updates automatically.</value>
+  </data>
+  <data name="Help_GeoMaxMindLink.Content" xml:space="preserve">
+    <value>Open MaxMind GeoLite2</value>
+  </data>
+  <data name="Help_OpenGeoFolder.Content" xml:space="preserve">
+    <value>Open GeoIP folder</value>
+  </data>
 
   <!-- ═══════════════════════════════════════════════════════════════
        Tab 1: General
@@ -326,6 +368,351 @@
     <value>Language changed</value>
   </data>
   <data name="LanguageChanged_Message" xml:space="preserve">
-    <value>The language setting has been applied. Navigate to another page and back to fully apply the new language.</value>
+    <value>The language has been saved. Restart the app for the new language to take full effect.</value>
   </data>
+  <data name="LanguageChanged_RestartButton" xml:space="preserve">
+    <value>Restart now</value>
+  </data>
+  <data name="LanguageChanged_LaterButton" xml:space="preserve">
+    <value>Later</value>
+  </data>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       BlockConfirmationDialog
+       ═══════════════════════════════════════════════════════════════ -->
+  <data name="BlockDialog.Title" xml:space="preserve">
+    <value>Block connection</value>
+  </data>
+  <data name="BlockDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="BlockDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BlockDialog_Question.Text" xml:space="preserve">
+    <value>What should be blocked?</value>
+  </data>
+  <data name="BlockDialog_IpOnly.Content" xml:space="preserve">
+    <value>Only this IP address</value>
+  </data>
+  <data name="BlockDialog_AppOnly.Content" xml:space="preserve">
+    <value>Entire application (all connections)</value>
+  </data>
+  <data name="BlockDialog_AppAndIp.Content" xml:space="preserve">
+    <value>Application + this IP (double block)</value>
+  </data>
+  <data name="BlockDialog_SystemWarning.Title" xml:space="preserve">
+    <value>System application</value>
+  </data>
+  <data name="BlockDialog_SystemWarning.Message" xml:space="preserve">
+    <value>This application is a Windows system component. Blocking it may affect system stability or Windows Update.</value>
+  </data>
+  <data name="BlockDialog_AdminWarning.Title" xml:space="preserve">
+    <value>Administrator rights required</value>
+  </data>
+  <data name="BlockDialog_AdminWarning.Message" xml:space="preserve">
+    <value>Firewall rules can only be created with administrator rights.</value>
+  </data>
+
+  <!-- ═══ DnsPage ═══ -->
+  <data name="Dns_StatusBanner.Title" xml:space="preserve"><value>DNS monitoring inactive</value></data>
+  <data name="Dns_RestartBanner.Content" xml:space="preserve"><value>Restart</value></data>
+  <data name="Dns_TotalLabel.Text" xml:space="preserve"><value>Total</value></data>
+  <data name="Dns_TrackerLabel.Text" xml:space="preserve"><value>Tracker</value></data>
+  <data name="Dns_TelemetryLabel.Text" xml:space="preserve"><value>Telemetry</value></data>
+  <data name="Dns_CdnLabel.Text" xml:space="preserve"><value>CDN</value></data>
+  <data name="Dns_SuspiciousLabel.Text" xml:space="preserve"><value>Suspicious</value></data>
+  <data name="Dns_RateLabel.Text" xml:space="preserve"><value>Rate (Raw)</value></data>
+  <data name="Dns_DiagEtwRaw.Text" xml:space="preserve"><value>ETW Raw:</value></data>
+  <data name="Dns_DiagAccepted.Text" xml:space="preserve"><value>  •  Accepted:</value></data>
+  <data name="Dns_DiagRuntime.Text" xml:space="preserve"><value>  •  Runtime:</value></data>
+  <data name="Dns_SelfTestButton.Content" xml:space="preserve"><value>Self-Test</value></data>
+  <data name="Dns_SelfTestButton.ToolTipService.ToolTip" xml:space="preserve"><value>Runs a test DNS query and verifies that it arrives in the pipeline.</value></data>
+  <data name="Dns_RestartButton.Content" xml:space="preserve"><value>Restart</value></data>
+  <data name="Dns_ClearButton.Content" xml:space="preserve"><value>Clear</value></data>
+  <data name="Dns_FilterBox.PlaceholderText" xml:space="preserve"><value>Filter domain or process …</value></data>
+  <data name="Dns_HeaderTime.Text" xml:space="preserve"><value>TIME</value></data>
+  <data name="Dns_HeaderProcess.Text" xml:space="preserve"><value>PROCESS</value></data>
+  <data name="Dns_HeaderDomain.Text" xml:space="preserve"><value>DOMAIN</value></data>
+  <data name="Dns_HeaderType.Text" xml:space="preserve"><value>TYPE</value></data>
+  <data name="Dns_HeaderCategory.Text" xml:space="preserve"><value>CATEGORY</value></data>
+  <data name="Dns_HeaderResolvedIps.Text" xml:space="preserve"><value>RESOLVED IPS</value></data>
+
+  <!-- ═══ FirewallPage ═══ -->
+  <data name="Fw_AdminWarning.Title" xml:space="preserve"><value>Limited functionality</value></data>
+  <data name="Fw_AdminWarning.Message" xml:space="preserve"><value>Firewall rules can only be managed with administrator privileges.</value></data>
+  <data name="Fw_RunAsAdmin.Content" xml:space="preserve"><value>Run as administrator</value></data>
+  <data name="Fw_SearchBox.PlaceholderText" xml:space="preserve"><value>Search rules (name, path, IP) …</value></data>
+  <data name="Fw_RefreshButton.ToolTipService.ToolTip" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Fw_RefreshLabel.Text" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Fw_TabNetOverseer.Header" xml:space="preserve"><value>NetOverseer rules</value></data>
+  <data name="Fw_ColRuleName.Text" xml:space="preserve"><value>RULE NAME</value></data>
+  <data name="Fw_ColAction.Text" xml:space="preserve"><value>ACTION</value></data>
+  <data name="Fw_ColProtocol.Text" xml:space="preserve"><value>PROTOCOL</value></data>
+  <data name="Fw_ColTarget.Text" xml:space="preserve"><value>TARGET</value></data>
+  <data name="Fw_ColActive.Text" xml:space="preserve"><value>ENABLED</value></data>
+  <data name="Fw_EditRuleTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Edit rule</value></data>
+  <data name="Fw_RemoveRuleTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Remove rule</value></data>
+  <data name="Fw_EmptyNetOverseerTitle.Text" xml:space="preserve"><value>No NetOverseer rules available</value></data>
+  <data name="Fw_EmptyNetOverseerHint.Text" xml:space="preserve"><value>Block applications via Live Connections to create your own rules.</value></data>
+  <data name="Fw_TabOrphaned.Header" xml:space="preserve"><value>Orphaned rules</value></data>
+  <data name="Fw_OrphanedInfo.Message" xml:space="preserve"><value>These rules refer to applications that are no longer installed.</value></data>
+  <data name="Fw_EditButton.Content" xml:space="preserve"><value>Edit</value></data>
+  <data name="Fw_RemoveButton.Content" xml:space="preserve"><value>Remove</value></data>
+  <data name="Fw_EmptyOrphanedTitle.Text" xml:space="preserve"><value>No orphaned rules</value></data>
+  <data name="Fw_EmptyOrphanedHint.Text" xml:space="preserve"><value>All firewall rules reference existing applications.</value></data>
+  <data name="Fw_TabAllRules.Header" xml:space="preserve"><value>All rules</value></data>
+  <data name="Fw_AllRulesInfo.Message" xml:space="preserve"><value>All Windows firewall rules grouped by application. Rules appear while loading.</value></data>
+  <data name="Fw_OrphanedBadge.Text" xml:space="preserve"><value>Orphaned</value></data>
+  <data name="Fw_EditTooltipAll.ToolTipService.ToolTip" xml:space="preserve"><value>Edit</value></data>
+  <data name="Fw_RemoveTooltipAll.ToolTipService.ToolTip" xml:space="preserve"><value>Remove</value></data>
+  <data name="Fw_EmptyAllTitle.Text" xml:space="preserve"><value>No firewall rules found</value></data>
+  <data name="Fw_EmptyAllHint.Text" xml:space="preserve"><value>Could the search filter not match any existing rules?</value></data>
+  <data name="Fw_EditPaneTitle.Text" xml:space="preserve"><value>Edit rule</value></data>
+  <data name="Fw_EditPaneSubtitle.Text" xml:space="preserve"><value>Detailed configuration of the firewall rule.</value></data>
+  <data name="Fw_CloseTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Close</value></data>
+  <data name="Fw_FieldName.Text" xml:space="preserve"><value>Name</value></data>
+  <data name="Fw_FieldDescription.Text" xml:space="preserve"><value>Description</value></data>
+  <data name="Fw_FieldAppPath.Text" xml:space="preserve"><value>Application path (empty = global)</value></data>
+  <data name="Fw_FieldDirection.Text" xml:space="preserve"><value>Direction</value></data>
+  <data name="Fw_DirectionInbound.Content" xml:space="preserve"><value>Inbound</value></data>
+  <data name="Fw_DirectionOutbound.Content" xml:space="preserve"><value>Outbound</value></data>
+  <data name="Fw_FieldAction.Text" xml:space="preserve"><value>Action</value></data>
+  <data name="Fw_ActionAllow.Content" xml:space="preserve"><value>Allow</value></data>
+  <data name="Fw_ActionBlock.Content" xml:space="preserve"><value>Block</value></data>
+  <data name="Fw_FieldProtocol.Text" xml:space="preserve"><value>Protocol</value></data>
+  <data name="Fw_ProtocolAll.Content" xml:space="preserve"><value>All</value></data>
+  <data name="Fw_FieldLocalPorts.Text" xml:space="preserve"><value>Local ports</value></data>
+  <data name="Fw_LocalPortsPlaceholder.PlaceholderText" xml:space="preserve"><value>* or 80,443</value></data>
+  <data name="Fw_FieldRemotePorts.Text" xml:space="preserve"><value>Remote ports</value></data>
+  <data name="Fw_RemotePortsPlaceholder.PlaceholderText" xml:space="preserve"><value>* or 443</value></data>
+  <data name="Fw_FieldRemoteAddresses.Text" xml:space="preserve"><value>Remote addresses</value></data>
+  <data name="Fw_RemoteAddressesPlaceholder.PlaceholderText" xml:space="preserve"><value>* or 1.2.3.4, 10.0.0.0/8</value></data>
+  <data name="Fw_RuleActiveToggle.Header" xml:space="preserve"><value>Rule enabled</value></data>
+  <data name="Fw_RuleActiveToggle.OnContent" xml:space="preserve"><value>On</value></data>
+  <data name="Fw_RuleActiveToggle.OffContent" xml:space="preserve"><value>Off</value></data>
+  <data name="Fw_CancelButton.Content" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Fw_SaveButton.Content" xml:space="preserve"><value>Save</value></data>
+
+  <!-- ═══ StartupPage ═══ -->
+  <data name="Startup_BootmonitorTitle.Text" xml:space="preserve"><value>Boot monitor (pre-login)</value></data>
+  <data name="Startup_BootmonitorDescription.Text" xml:space="preserve"><value>Runs as SYSTEM at Windows startup – even before user sign-in – and records the first 60 seconds of network connections.</value></data>
+  <data name="Startup_EnableButton.Content" xml:space="preserve"><value>Enable</value></data>
+  <data name="Startup_DisableButton.Content" xml:space="preserve"><value>Disable</value></data>
+  <data name="Startup_TestNowButton.Content" xml:space="preserve"><value>Test now</value></data>
+  <data name="Startup_TestNowButton.ToolTipService.ToolTip" xml:space="preserve"><value>Starts a 60-second test recording in the current process (without restarting).</value></data>
+  <data name="Startup_RefreshButton.ToolTipService.ToolTip" xml:space="preserve"><value>Reload last recording</value></data>
+  <data name="Startup_LastSystemStartLabel.Text" xml:space="preserve"><value>Last system start</value></data>
+  <data name="Startup_RecordingLabel.Text" xml:space="preserve"><value>Recording</value></data>
+  <data name="Startup_ConnectionsLabel.Text" xml:space="preserve"><value>Connections</value></data>
+  <data name="Startup_ProcessesLabel.Text" xml:space="preserve"><value>Processes</value></data>
+  <data name="Startup_NoDataTitle.Text" xml:space="preserve"><value>No recording yet</value></data>
+  <data name="Startup_NoDataDescription.Text" xml:space="preserve"><value>Click "Enable" above to set up the boot monitor. At the next Windows start, the first 60 seconds of network connections will be recorded as SYSTEM – even before sign-in.</value></data>
+  <data name="Startup_ColumnTime.Text" xml:space="preserve"><value>Time</value></data>
+  <data name="Startup_ColumnProcess.Text" xml:space="preserve"><value>Process</value></data>
+  <data name="Startup_ColumnPid.Text" xml:space="preserve"><value>PID</value></data>
+  <data name="Startup_ColumnProto.Text" xml:space="preserve"><value>Proto</value></data>
+  <data name="Startup_ColumnLocal.Text" xml:space="preserve"><value>Local</value></data>
+  <data name="Startup_ColumnRemote.Text" xml:space="preserve"><value>Remote</value></data>
+
+  <!-- ═══ LiveConnectionsPage ═══ -->
+  <data name="Live_GeoDbWarning.Title" xml:space="preserve"><value>Geolocation unavailable</value></data>
+  <data name="Live_GeoDbWarning.Message" xml:space="preserve"><value>The GeoLite2 database was not found. Countries and location information cannot be displayed. See the “Help” tab in the settings for installation instructions.</value></data>
+
+  <!-- ═══ Runtime strings (GetString) ═══ -->
+  <data name="Filter_State_Established" xml:space="preserve"><value>Established</value></data>
+  <data name="Filter_State_Listen" xml:space="preserve"><value>Listening</value></data>
+  <data name="Filter_State_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Filter_Rep_Safe" xml:space="preserve"><value>Safe</value></data>
+  <data name="Filter_Rep_Suspicious" xml:space="preserve"><value>Suspicious</value></data>
+  <data name="Filter_Rep_Dangerous" xml:space="preserve"><value>Dangerous</value></data>
+  <data name="Filter_Rep_MsTelemetry" xml:space="preserve"><value>Microsoft telemetry</value></data>
+  <data name="Filter_Rep_Private" xml:space="preserve"><value>Private/Loopback</value></data>
+  <data name="Filter_Rep_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Filter_Inf_MsTelemetry" xml:space="preserve"><value>Microsoft telemetry</value></data>
+  <data name="Filter_Inf_Tor" xml:space="preserve"><value>Tor exit node</value></data>
+  <data name="Filter_Inf_Public" xml:space="preserve"><value>Public (other)</value></data>
+  <data name="ConnState_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="ConnState_Listen" xml:space="preserve"><value>Listening</value></data>
+  <data name="ConnState_Closing" xml:space="preserve"><value>Closing</value></data>
+  <data name="ConnState_Closed" xml:space="preserve"><value>Closed</value></data>
+  <data name="AppMenu_ShowActivity" xml:space="preserve"><value>Show activity</value></data>
+  <data name="AppMenu_ShowFirewall" xml:space="preserve"><value>Show firewall rules</value></data>
+  <data name="AppMenu_ShowProperties" xml:space="preserve"><value>Show properties</value></data>
+  <data name="AppMenu_CopyPath" xml:space="preserve"><value>Copy path</value></data>
+  <data name="AppMenu_OpenExplorer" xml:space="preserve"><value>Open in Explorer</value></data>
+  <data name="AppMenu_AddTrust" xml:space="preserve"><value>Mark as trusted</value></data>
+  <data name="AppMenu_RemoveTrust" xml:space="preserve"><value>Remove trust</value></data>
+  <data name="AppMenu_BlockFirewall" xml:space="preserve"><value>Block app in firewall</value></data>
+  <data name="App_TrustTrusted" xml:space="preserve"><value>Trusted</value></data>
+  <data name="App_TrustNormal" xml:space="preserve"><value>Normal</value></data>
+  <data name="App_BlockBlocked" xml:space="preserve"><value>Blocked</value></data>
+  <data name="App_BlockOpen" xml:space="preserve"><value>Open</value></data>
+  <data name="App_FilePresent" xml:space="preserve"><value>Present</value></data>
+  <data name="App_FileMissing" xml:space="preserve"><value>Not found</value></data>
+  <data name="App_FileUnknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="App_TrafficDisabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="App_TrafficUpDown" xml:space="preserve"><value>{0} up / {1} down</value></data>
+  <data name="ConnMenu_ShowDetails" xml:space="preserve"><value>Show details</value></data>
+  <data name="ConnMenu_CopyHostname" xml:space="preserve"><value>Copy hostname</value></data>
+  <data name="ConnMenu_CopyRemote" xml:space="preserve"><value>Copy remote address</value></data>
+  <data name="ConnMenu_OpenWhois" xml:space="preserve"><value>Open Whois</value></data>
+  <data name="ConnMenu_LoadFirewall" xml:space="preserve"><value>Load firewall rules for this app</value></data>
+  <data name="ConnMenu_BlockConnection" xml:space="preserve"><value>Block connection …</value></data>
+  <data name="Live_SearchBox.PlaceholderText" xml:space="preserve"><value>Search by app, IP, or hostname …</value></data>
+  <data name="Live_FilterIpV4.ToolTipService.ToolTip" xml:space="preserve"><value>Show only IPv4 connections (click again to show both)</value></data>
+  <data name="Live_FilterIpV6.ToolTipService.ToolTip" xml:space="preserve"><value>Show only IPv6 connections (click again to show both)</value></data>
+  <data name="Live_FilterTelemetry.Content" xml:space="preserve"><value>🪟 Telemetry</value></data>
+  <data name="Live_FilterTelemetry.ToolTipService.ToolTip" xml:space="preserve"><value>Show only Microsoft telemetry connections</value></data>
+  <data name="Live_ClearFilter.Content" xml:space="preserve"><value>Reset filters</value></data>
+  <data name="Live_AdvancedFilterButton.ToolTipService.ToolTip" xml:space="preserve"><value>Detailed filters (Status, Reputation, Country, Port, Ignore …)</value></data>
+  <data name="Live_AdvancedFilterLabel.Text" xml:space="preserve"><value>Advanced filters</value></data>
+  <data name="Live_AdvancedFilterTitle.Text" xml:space="preserve"><value>Advanced filters</value></data>
+  <data name="Live_SectionConnectionStatus.Text" xml:space="preserve"><value>Connection status</value></data>
+  <data name="Live_SectionReputation.Text" xml:space="preserve"><value>Reputation</value></data>
+  <data name="Live_SectionInfrastructure.Text" xml:space="preserve"><value>Infrastructure</value></data>
+  <data name="Live_CountryCodeFilter.Header" xml:space="preserve"><value>Country codes (comma-separated, e.g. DE, US)</value></data>
+  <data name="Live_CountryCodeFilter.PlaceholderText" xml:space="preserve"><value>e.g. DE, US, IE</value></data>
+  <data name="Live_PortFilter.Header" xml:space="preserve"><value>Ports (comma-separated)</value></data>
+  <data name="Live_PortFilter.PlaceholderText" xml:space="preserve"><value>e.g. 80, 443, 8080</value></data>
+  <data name="Live_IgnoreProcessFilter.Header" xml:space="preserve"><value>Ignore processes (substring, comma-separated)</value></data>
+  <data name="Live_IgnoreProcessFilter.PlaceholderText" xml:space="preserve"><value>e.g. svchost, OneDrive</value></data>
+  <data name="Live_HidePrivateToggle.Header" xml:space="preserve"><value>Hide private/loopback addresses</value></data>
+  <data name="Live_HidePrivateToggle.OffContent" xml:space="preserve"><value>Show</value></data>
+  <data name="Live_HidePrivateToggle.OnContent" xml:space="preserve"><value>Hide</value></data>
+  <data name="Live_ResetAdvanced.Content" xml:space="preserve"><value>Reset advanced</value></data>
+  <data name="Live_ColApplication.Text" xml:space="preserve"><value>Application</value></data>
+  <data name="Live_ColProtocol.Text" xml:space="preserve"><value>Proto</value></data>
+  <data name="Live_ColLocal.Text" xml:space="preserve"><value>Local</value></data>
+  <data name="Live_ColRemote.Text" xml:space="preserve"><value>Remote</value></data>
+  <data name="Live_ColHostname.Text" xml:space="preserve"><value>Hostname</value></data>
+  <data name="Live_ColCountry.Text" xml:space="preserve"><value>Country</value></data>
+  <data name="Live_ColReputation.Text" xml:space="preserve"><value>Reputation</value></data>
+  <data name="Live_ColStatus.Text" xml:space="preserve"><value>Status</value></data>
+  <data name="Live_FirewallRulesTitle.Text" xml:space="preserve"><value>Firewall rules</value></data>
+  <data name="Live_RefreshRulesButton.ToolTipService.ToolTip" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Live_CloseRulesButton.ToolTipService.ToolTip" xml:space="preserve"><value>Close</value></data>
+  <data name="Live_LoadingRules.Text" xml:space="preserve"><value>Loading firewall rules …</value></data>
+  <data name="Live_NoRulesTitle.Text" xml:space="preserve"><value>No firewall rules found</value></data>
+  <data name="Live_NoRulesDescription.Text" xml:space="preserve"><value>No rules are configured for this application in the Windows Firewall.</value></data>
+  <data name="Live_RemoveRuleButton.ToolTipService.ToolTip" xml:space="preserve"><value>Remove rule</value></data>
+
+  <!-- ═══ HistoryPage ═══ -->
+  <data name="Hist_Title.Text" xml:space="preserve"><value>History</value></data>
+  <data name="Hist_RefreshButton.Text" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Hist_TimeRangeLabel.Text" xml:space="preserve"><value>Time range:</value></data>
+  <data name="Hist_RbHour.Content" xml:space="preserve"><value>Last hour</value></data>
+  <data name="Hist_RbDay.Content" xml:space="preserve"><value>24 hours</value></data>
+  <data name="Hist_RbWeek.Content" xml:space="preserve"><value>7 days</value></data>
+  <data name="Hist_AppFilter.PlaceholderText" xml:space="preserve"><value>Filter application …</value></data>
+  <data name="Hist_ActivityPivot.Header" xml:space="preserve"><value>Activity</value></data>
+  <data name="Hist_NoConnections.Text" xml:space="preserve"><value>No connections in the selected time range.</value></data>
+  <data name="Hist_ActiveApps.Text" xml:space="preserve"><value>Active apps</value></data>
+  <data name="Hist_ActiveAppsCaption.Text" xml:space="preserve"><value>with activity in the selected time range</value></data>
+  <data name="Hist_Connections.Text" xml:space="preserve"><value>Connections</value></data>
+  <data name="Hist_ConnectionsCaption.Text" xml:space="preserve"><value>total in the current window</value></data>
+  <data name="Hist_DataVolume.Text" xml:space="preserve"><value>Data volume</value></data>
+  <data name="Hist_DataVolumeCaption.Text" xml:space="preserve"><value>Upload plus download</value></data>
+  <data name="Hist_SuspiciousApps.Text" xml:space="preserve"><value>Suspicious apps</value></data>
+  <data name="Hist_SuspiciousAppsCaption.Text" xml:space="preserve"><value>with low reputation</value></data>
+  <data name="Hist_BusiestApp.Text" xml:space="preserve"><value>Busiest app</value></data>
+  <data name="Hist_TimelineTitle.Text" xml:space="preserve"><value>Timeline by application</value></data>
+  <data name="Hist_TimelineSubtitle.Text" xml:space="preserve"><value>Sorted by connections and data volume. Clicking a row opens the detail view.</value></data>
+  <data name="Hist_ActivityProfile.Text" xml:space="preserve"><value>Activity profile</value></data>
+  <data name="Hist_TopAppsTitle.Text" xml:space="preserve"><value>Top apps in period</value></data>
+  <data name="Hist_TopAppsSubtitle.Text" xml:space="preserve"><value>The most active applications in the currently selected window.</value></data>
+  <data name="Hist_FreshWarningsTitle.Text" xml:space="preserve"><value>Fresh warnings</value></data>
+  <data name="Hist_FreshWarningsSubtitle.Text" xml:space="preserve"><value>Suspicious targets with poor reputation in the same time range.</value></data>
+  <data name="Hist_WeeklyPivot.Header" xml:space="preserve"><value>7-day report</value></data>
+  <data name="Hist_WeeklyTitle.Text" xml:space="preserve"><value>Weekly report</value></data>
+  <data name="Hist_WeeklySubtitle.Text" xml:space="preserve"><value>Condensed 7-day overview of traffic volume, data-intensive applications and suspicious targets.</value></data>
+  <data name="Hist_ExportHtml.Text" xml:space="preserve"><value>Export as HTML</value></data>
+  <data name="Hist_ConnectionsWeek.Text" xml:space="preserve"><value>Connections (7 days)</value></data>
+  <data name="Hist_DataVolumeTotal.Text" xml:space="preserve"><value>Total data volume</value></data>
+  <data name="Hist_SuspiciousAppsWeek.Text" xml:space="preserve"><value>Apps with suspicious connections</value></data>
+  <data name="Hist_Top5Data.Text" xml:space="preserve"><value>Top 5 data-intensive applications</value></data>
+  <data name="Hist_Top5Suspicious.Text" xml:space="preserve"><value>Top 5 suspicious connections</value></data>
+
+  <!-- ═══ ApplicationsPage ═══ -->
+  <data name="Apps_SearchPlaceholder.PlaceholderText" xml:space="preserve"><value>Search application (name, process, path) …</value></data>
+  <data name="Apps_RefreshButton.Text" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Apps_TrafficMetricsToggle.Header" xml:space="preserve"><value>Traffic metrics</value></data>
+  <data name="Apps_LoadingText.Text" xml:space="preserve"><value>Loading applications …</value></data>
+  <data name="Apps_ColumnApplication.Text" xml:space="preserve"><value>Application</value></data>
+  <data name="Apps_ColumnPath.Text" xml:space="preserve"><value>Path</value></data>
+  <data name="Apps_ColumnUpload.Text" xml:space="preserve"><value>Upload</value></data>
+  <data name="Apps_ColumnDownload.Text" xml:space="preserve"><value>Download</value></data>
+  <data name="Apps_ColumnLastActivity.Text" xml:space="preserve"><value>Last activity</value></data>
+  <data name="Apps_ColumnTrust.Text" xml:space="preserve"><value>Trust</value></data>
+  <data name="Apps_ColumnFirewall.Text" xml:space="preserve"><value>Firewall</value></data>
+  <data name="Apps_DetailsTitle.Text" xml:space="preserve"><value>Application details</value></data>
+  <data name="Apps_DetailsRefreshTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Refresh</value></data>
+  <data name="Apps_DetailsCloseTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Close</value></data>
+  <data name="Apps_SectionActivity.Content" xml:space="preserve"><value>Activity</value></data>
+  <data name="Apps_SectionFirewall.Content" xml:space="preserve"><value>Firewall</value></data>
+  <data name="Apps_SectionProperties.Content" xml:space="preserve"><value>Properties</value></data>
+  <data name="Apps_ConnectionsCard.Text" xml:space="preserve"><value>Connections (24h)</value></data>
+  <data name="Apps_SuspiciousCard.Text" xml:space="preserve"><value>Suspicious (24h)</value></data>
+  <data name="Apps_LoadingFirewallRules.Text" xml:space="preserve"><value>Loading firewall rules …</value></data>
+  <data name="Apps_NoFirewallRulesTitle.Text" xml:space="preserve"><value>No firewall rules</value></data>
+  <data name="Apps_NoFirewallRulesBody.Text" xml:space="preserve"><value>There are no specific rules for this application.</value></data>
+  <data name="Apps_RemoveRuleTooltip.ToolTipService.ToolTip" xml:space="preserve"><value>Remove rule</value></data>
+  <data name="Apps_PropertiesHeader.Text" xml:space="preserve"><value>Properties</value></data>
+  <data name="Apps_PropPath.Text" xml:space="preserve"><value>Path</value></data>
+  <data name="Apps_PropFile.Text" xml:space="preserve"><value>File</value></data>
+  <data name="Apps_PropTrustStatus.Text" xml:space="preserve"><value>Trust status</value></data>
+  <data name="Apps_PropFirewallStatus.Text" xml:space="preserve"><value>Firewall status</value></data>
+  <data name="Apps_PropLastSeen.Text" xml:space="preserve"><value>Last seen</value></data>
+  <data name="Apps_PropTrafficTotal.Text" xml:space="preserve"><value>Total traffic</value></data>
+
+  <!-- ═══ TelemetryPage ═══ -->
+  <data name="Tel_CardConnections.Text" xml:space="preserve"><value>Connections</value></data>
+  <data name="Tel_CardUniqueHosts.Text" xml:space="preserve"><value>Unique hosts</value></data>
+  <data name="Tel_CardActiveServices.Text" xml:space="preserve"><value>Active services</value></data>
+  <data name="Tel_CardTransferred.Text" xml:space="preserve"><value>Transferred</value></data>
+  <data name="Tel_SearchBox.PlaceholderText" xml:space="preserve"><value>Filter by hostname, IP, or process …</value></data>
+  <data name="Tel_ExportReportButton.ToolTipService.ToolTip" xml:space="preserve"><value>Save HTML report to 'Downloads' and open it</value></data>
+  <data name="Tel_ExportReportLabel.Text" xml:space="preserve"><value>HTML report</value></data>
+  <data name="Tel_ClearDataButton.ToolTipService.ToolTip" xml:space="preserve"><value>Reset collected data</value></data>
+  <data name="Tel_ChipAll.Text" xml:space="preserve"><value>All</value></data>
+  <data name="Tel_HeaderService.Text" xml:space="preserve"><value>Service</value></data>
+  <data name="Tel_HeaderHostname.Text" xml:space="preserve"><value>Hostname</value></data>
+  <data name="Tel_HeaderProcess.Text" xml:space="preserve"><value>Process</value></data>
+  <data name="Tel_HeaderPid.Text" xml:space="preserve"><value>PID</value></data>
+  <data name="Tel_HeaderRemoteIp.Text" xml:space="preserve"><value>Remote IP</value></data>
+  <data name="Tel_HeaderCountry.Text" xml:space="preserve"><value>Country</value></data>
+  <data name="Tel_HeaderHits.Text" xml:space="preserve"><value>Hits</value></data>
+  <data name="Tel_HeaderBytes.Text" xml:space="preserve"><value>Bytes</value></data>
+  <data name="Tel_HeaderLastSeen.Text" xml:space="preserve"><value>Last seen</value></data>
+  <data name="Tel_EmptyTitle.Text" xml:space="preserve"><value>No telemetry connections detected yet</value></data>
+  <data name="Tel_EmptyBody.Text" xml:space="preserve"><value>Connections to Microsoft telemetry endpoints (DiagTrack, Windows Update, Defender, OneDrive …) are shown here in real time. Recording runs in the background – as soon as Windows contacts a matching endpoint, it appears here.</value></data>
+  <data name="Tel_EmptyHint.Text" xml:space="preserve"><value>Tip: DNS resolution requires administrator rights (ETW). Without it, hosts are only detected by IP range.</value></data>
+
+  <!-- ═══ ConnectionDetailDialog ═══ -->
+  <data name="ConnDetail_Dialog.Title" xml:space="preserve"><value>Connection Details</value></data>
+  <data name="ConnDetail_Dialog.CloseButtonText" xml:space="preserve"><value>Close</value></data>
+  <data name="ConnDetail_SectionApplication.Text" xml:space="preserve"><value>Application</value></data>
+  <data name="ConnDetail_SectionConnection.Text" xml:space="preserve"><value>Connection</value></data>
+  <data name="ConnDetail_LabelProtocol.Text" xml:space="preserve"><value>Protocol</value></data>
+  <data name="ConnDetail_LabelLocal.Text" xml:space="preserve"><value>Local</value></data>
+  <data name="ConnDetail_LabelRemote.Text" xml:space="preserve"><value>Remote</value></data>
+  <data name="ConnDetail_LabelHostname.Text" xml:space="preserve"><value>Hostname</value></data>
+  <data name="ConnDetail_LabelStatus.Text" xml:space="preserve"><value>Status</value></data>
+  <data name="ConnDetail_SectionGeolocation.Text" xml:space="preserve"><value>Geolocation</value></data>
+  <data name="ConnDetail_LabelCountry.Text" xml:space="preserve"><value>Country</value></data>
+  <data name="ConnDetail_LabelOrganisation.Text" xml:space="preserve"><value>Organization</value></data>
+  <data name="ConnDetail_LabelCategory.Text" xml:space="preserve"><value>Category</value></data>
+  <data name="ConnDetail_SectionReputation.Text" xml:space="preserve"><value>Reputation</value></data>
+  <data name="ConnDetail_LabelRating.Text" xml:space="preserve"><value>Rating</value></data>
+  <data name="ConnDetail_LabelSource.Text" xml:space="preserve"><value>Source</value></data>
+  <data name="ConnDetail_SectionTimestamps.Text" xml:space="preserve"><value>Timestamps</value></data>
+  <data name="ConnDetail_LabelFirstSeen.Text" xml:space="preserve"><value>First Activity</value></data>
+  <data name="ConnDetail_LabelLastSeen.Text" xml:space="preserve"><value>Last Activity</value></data>
+
+  <!-- ═══ SettingsPage (Capture control) ═══ -->
+  <data name="Set_CaptureControlTitle.Text" xml:space="preserve"><value>Capture control</value></data>
+  <data name="Set_CaptureControlDesc.Text" xml:space="preserve"><value>Capture is enabled automatically at application startup. You can control it manually here if needed.</value></data>
+  <data name="Set_CaptureStart.Text" xml:space="preserve"><value>Start</value></data>
+  <data name="Set_CaptureStop.Text" xml:space="preserve"><value>Stop</value></data>
+  <data name="Set_CaptureRestart.Text" xml:space="preserve"><value>Restart</value></data>
 </root>

@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Dispatching;
+using NetOverseer.App.Services;
 using NetOverseer.Core.Interfaces;
 using NetOverseer.Core.Models;
 
@@ -28,6 +29,7 @@ public sealed partial class LiveConnectionsViewModel : ObservableObject, IDispos
     private readonly IReputationService    _reputationService;
     private readonly IDnsCache             _dnsCache;
     private readonly IMicrosoftTelemetryService _telemetryService;
+    private readonly ISettingsService      _settingsService;
     private readonly ILogger<LiveConnectionsViewModel> _logger;
 
     // ──────────────────────────────────────────────────────────────────────
@@ -64,10 +66,12 @@ public sealed partial class LiveConnectionsViewModel : ObservableObject, IDispos
     /// </summary>
     public AppFirewallRulesViewModel AppFirewallRules { get; }
     /// <summary>
-    /// True wenn die GeoLite2-Datenbank nicht geladen werden konnte.
+    /// True wenn die GeoLite2-Datenbank nicht geladen werden konnte und der
+    /// Benutzer die Warnung nicht in den Einstellungen ausgeblendet hat.
     /// Steuert die InfoBar-Sichtbarkeit in LiveConnectionsPage.
     /// </summary>
-    public bool ShowGeoDbMissingWarning => !_geoService.IsDatabaseLoaded;
+    public bool ShowGeoDbMissingWarning =>
+        !_geoService.IsDatabaseLoaded && !_settingsService.Load().HideGeoDbMissingWarning;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(ConnectionCountText))]
@@ -120,36 +124,36 @@ public sealed partial class LiveConnectionsViewModel : ObservableObject, IDispos
     /// <summary>Verbindungs-Status (Established/Listen/TimeWait/CloseWait).</summary>
     public IReadOnlyList<FilterOptionViewModel> StateFilters { get; } =
     [
-        new("Hergestellt",      nameof(ConnectionState.Established)),
-        new("Lauscht",          nameof(ConnectionState.Listen)),
-        new("TIME_WAIT",        nameof(ConnectionState.TimeWait)),
-        new("CLOSE_WAIT",       nameof(ConnectionState.CloseWait)),
-        new("Unbekannt",        nameof(ConnectionState.Unknown)),
+        new(LocalizationService.GetString("Filter_State_Established"), nameof(ConnectionState.Established)),
+        new(LocalizationService.GetString("Filter_State_Listen"),      nameof(ConnectionState.Listen)),
+        new("TIME_WAIT",                                              nameof(ConnectionState.TimeWait)),
+        new("CLOSE_WAIT",                                             nameof(ConnectionState.CloseWait)),
+        new(LocalizationService.GetString("Filter_State_Unknown"),    nameof(ConnectionState.Unknown)),
     ];
 
     /// <summary>Reputation-Kategorien.</summary>
     public IReadOnlyList<FilterOptionViewModel> ReputationFilters { get; } =
     [
-        new("Sicher",                nameof(ReputationCategory.Safe)),
-        new("Verdächtig",            nameof(ReputationCategory.Suspicious)),
-        new("Gefährlich",            nameof(ReputationCategory.Dangerous)),
-        new("Microsoft-Telemetrie",  nameof(ReputationCategory.MicrosoftTelemetry)),
-        new("Privat/Loopback",       nameof(ReputationCategory.Private)),
-        new("Unbekannt",             nameof(ReputationCategory.Unknown)),
+        new(LocalizationService.GetString("Filter_Rep_Safe"),         nameof(ReputationCategory.Safe)),
+        new(LocalizationService.GetString("Filter_Rep_Suspicious"),   nameof(ReputationCategory.Suspicious)),
+        new(LocalizationService.GetString("Filter_Rep_Dangerous"),    nameof(ReputationCategory.Dangerous)),
+        new(LocalizationService.GetString("Filter_Rep_MsTelemetry"),  nameof(ReputationCategory.MicrosoftTelemetry)),
+        new(LocalizationService.GetString("Filter_Rep_Private"),      nameof(ReputationCategory.Private)),
+        new(LocalizationService.GetString("Filter_Rep_Unknown"),      nameof(ReputationCategory.Unknown)),
     ];
 
     /// <summary>Infrastruktur-Kategorien (Cloud-Anbieter etc.).</summary>
     public IReadOnlyList<FilterOptionViewModel> InfrastructureFilters { get; } =
     [
-        new("Microsoft Cloud",       nameof(IpInfrastructureCategory.MicrosoftCloud)),
-        new("Microsoft Telemetrie",  nameof(IpInfrastructureCategory.MicrosoftTelemetry)),
-        new("Google Cloud",          nameof(IpInfrastructureCategory.GoogleCloud)),
-        new("AWS",                   nameof(IpInfrastructureCategory.AwsCloud)),
-        new("Cloudflare",            nameof(IpInfrastructureCategory.Cloudflare)),
-        new("Akamai CDN",            nameof(IpInfrastructureCategory.AkamaiCdn)),
-        new("Tor Exit-Node",         nameof(IpInfrastructureCategory.TorExitNode)),
-        new("Öffentlich (sonstige)", nameof(IpInfrastructureCategory.Public)),
-        new("Privat/Loopback",       nameof(IpInfrastructureCategory.Private)),
+        new("Microsoft Cloud",                                        nameof(IpInfrastructureCategory.MicrosoftCloud)),
+        new(LocalizationService.GetString("Filter_Inf_MsTelemetry"),  nameof(IpInfrastructureCategory.MicrosoftTelemetry)),
+        new("Google Cloud",                                           nameof(IpInfrastructureCategory.GoogleCloud)),
+        new("AWS",                                                    nameof(IpInfrastructureCategory.AwsCloud)),
+        new("Cloudflare",                                             nameof(IpInfrastructureCategory.Cloudflare)),
+        new("Akamai CDN",                                             nameof(IpInfrastructureCategory.AkamaiCdn)),
+        new(LocalizationService.GetString("Filter_Inf_Tor"),          nameof(IpInfrastructureCategory.TorExitNode)),
+        new(LocalizationService.GetString("Filter_Inf_Public"),       nameof(IpInfrastructureCategory.Public)),
+        new(LocalizationService.GetString("Filter_Rep_Private"),      nameof(IpInfrastructureCategory.Private)),
     ];
 
     [ObservableProperty]
@@ -190,6 +194,7 @@ public sealed partial class LiveConnectionsViewModel : ObservableObject, IDispos
         IReputationService                 reputationService,
         IDnsCache                          dnsCache,
         IMicrosoftTelemetryService         telemetryService,
+        ISettingsService                   settingsService,
         AppFirewallRulesViewModel          appFirewallRules,
         ILogger<LiveConnectionsViewModel>  logger)
     {
@@ -199,6 +204,7 @@ public sealed partial class LiveConnectionsViewModel : ObservableObject, IDispos
         _reputationService = reputationService;
         _dnsCache          = dnsCache;
         _telemetryService  = telemetryService;
+        _settingsService   = settingsService;
         _logger            = logger;
         AppFirewallRules   = appFirewallRules;
 

@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using Microsoft.UI.Xaml;
+using NetOverseer.App.Services;
 using NetOverseer.Core.Interfaces;
 using NetOverseer.Core.Models;
 
@@ -31,8 +32,8 @@ public sealed class ApplicationListItemViewModel
     public string BytesSentDisplay => FormatBytes(TotalBytesSent);
     public string BytesRecvDisplay => FormatBytes(TotalBytesReceived);
     public string LastSeenDisplay  => LastSeen.LocalDateTime.ToString("g");
-    public string TrustDisplay     => IsTrusted ? "Vertraut" : "Normal";
-    public string BlockDisplay     => IsBlocked ? "Blockiert" : "Offen";
+    public string TrustDisplay     => IsTrusted ? LocalizationService.GetString("App_TrustTrusted") : LocalizationService.GetString("App_TrustNormal");
+    public string BlockDisplay     => IsBlocked ? LocalizationService.GetString("App_BlockBlocked") : LocalizationService.GetString("App_BlockOpen");
 
     private static string FormatBytes(long bytes) => bytes switch
     {
@@ -135,8 +136,8 @@ public sealed partial class ApplicationsViewModel : ObservableObject
     public string SelectedTrafficDisplay => SelectedApp is null
         ? "-"
         : IsTrafficMetricsEnabled
-            ? $"{SelectedApp.BytesSentDisplay} hoch / {SelectedApp.BytesRecvDisplay} runter"
-            : "Deaktiviert";
+            ? string.Format(LocalizationService.GetString("App_TrafficUpDown"), SelectedApp.BytesSentDisplay, SelectedApp.BytesRecvDisplay)
+            : LocalizationService.GetString("App_TrafficDisabled");
     public string SelectedTrustDisplay => SelectedApp?.TrustDisplay ?? "-";
     public string SelectedBlockDisplay => SelectedApp?.BlockDisplay ?? "-";
     public string FileExistsDisplay
@@ -144,8 +145,8 @@ public sealed partial class ApplicationsViewModel : ObservableObject
         get
         {
             var path = SelectedApp?.ExecutablePath;
-            if (string.IsNullOrWhiteSpace(path)) return "Unbekannt";
-            return File.Exists(path) ? "Vorhanden" : "Nicht gefunden";
+            if (string.IsNullOrWhiteSpace(path)) return LocalizationService.GetString("App_FileUnknown");
+            return File.Exists(path) ? LocalizationService.GetString("App_FilePresent") : LocalizationService.GetString("App_FileMissing");
         }
     }
 

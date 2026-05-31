@@ -6,7 +6,7 @@
     xmlns:vm="using:NetOverseer.App.ViewModels">
 
     <Page.Resources>
-        <!-- Singleton-Layout fÃ¼r Spaltenbreiten â€“ Header und Zeilen-Template binden
+        <!-- Singleton-Layout für Spaltenbreiten“ Header und Zeilen-Template binden
              an dieselbe Instanz, damit Drag-Resize auf alle Zeilen wirkt. -->
         <vm:StartupColumnLayoutSource x:Key="StartupColumnLayout"/>
 
@@ -22,17 +22,11 @@
 
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,*">
 
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-             Zeile 0 â€“ Lade-Indikator
-             â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <ProgressBar
             Grid.Row="0"
             IsIndeterminate="True"
             Visibility="{x:Bind ViewModel.LoadingVisibility, Mode=OneWay}"/>
 
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-             Zeile 1 â€“ Autostart-Steuerung (NEU)
-             â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <Border
             Grid.Row="1"
             Margin="16,12,16,0"
@@ -46,6 +40,7 @@
                     <StackPanel Grid.Column="0" Spacing="2">
                         <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
                             <TextBlock
+                                x:Uid="Startup_BootmonitorTitle"
                                 Text="Bootmonitor (Pre-Login)"
                                 Style="{StaticResource BodyStrongTextBlockStyle}"/>
                             <Border
@@ -60,7 +55,8 @@
                             </Border>
                         </StackPanel>
                         <TextBlock
-                            Text="LÃ¤uft als SYSTEM bereits beim Windows-Start â€“ noch vor der Benutzeranmeldung â€“ und zeichnet die ersten 60 Sekunden Netzwerkverbindungen auf."
+                            x:Uid="Startup_BootmonitorDescription"
+                            Text="LÃ¤uft als SYSTEM bereits beim Windows-Start “ noch vor der Benutzeranmeldung “ und zeichnet die ersten 60 Sekunden Netzwerkverbindungen auf."
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             TextWrapping="Wrap"
@@ -73,19 +69,23 @@
                         Spacing="8"
                         VerticalAlignment="Center">
                         <Button
+                            x:Uid="Startup_EnableButton"
                             Content="Aktivieren"
                             Style="{StaticResource AccentButtonStyle}"
                             Command="{x:Bind ViewModel.InstallAutostartCommand}"
                             IsEnabled="{x:Bind ViewModel.CanInstall, Mode=OneWay}"/>
                         <Button
+                            x:Uid="Startup_DisableButton"
                             Content="Deaktivieren"
                             Command="{x:Bind ViewModel.UninstallAutostartCommand}"
                             IsEnabled="{x:Bind ViewModel.IsAutostartInstalled, Mode=OneWay}"/>
                         <Button
+                            x:Uid="Startup_TestNowButton"
                             Content="Jetzt testen"
                             Command="{x:Bind ViewModel.RunNowCommand}"
                             ToolTipService.ToolTip="Startet eine 60-Sekunden-Testaufzeichnung im aktuellen Prozess (ohne Neustart)."/>
                         <Button
+                            x:Uid="Startup_RefreshButton"
                             Command="{x:Bind ViewModel.RefreshCommand}"
                             ToolTipService.ToolTip="Letzte Aufzeichnung neu laden">
                             <FontIcon Glyph="&#xE72C;" FontSize="14"/>
@@ -101,9 +101,6 @@
             </StackPanel>
         </Border>
 
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-             Zeile 2 â€“ Session-Zusammenfassung
-             â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <Border
             Grid.Row="2"
             Margin="16,8,16,0"
@@ -119,6 +116,7 @@
                     <!-- Systemstart -->
                     <StackPanel>
                         <TextBlock
+                            x:Uid="Startup_LastSystemStartLabel"
                             Text="Letzter Systemstart"
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -130,6 +128,7 @@
                     <!-- Aufzeichnungsdauer -->
                     <StackPanel>
                         <TextBlock
+                            x:Uid="Startup_RecordingLabel"
                             Text="Aufzeichnung"
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -141,6 +140,7 @@
                     <!-- Verbindungsanzahl -->
                     <StackPanel>
                         <TextBlock
+                            x:Uid="Startup_ConnectionsLabel"
                             Text="Verbindungen"
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -152,6 +152,7 @@
                     <!-- Prozesse -->
                     <StackPanel>
                         <TextBlock
+                            x:Uid="Startup_ProcessesLabel"
                             Text="Prozesse"
                             Style="{StaticResource CaptionTextBlockStyle}"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -163,16 +164,12 @@
             </Grid>
         </Border>
 
-        <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-             Zeile 4 â€“ Hauptinhalt (resizable Tabelle, einheitlicher Stil)
-             â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
         <Grid Grid.Row="4" Margin="16,8,16,16">
             <Grid.RowDefinitions>
                 <RowDefinition Height="36"/>  <!-- Spalten-Kopfzeile -->
                 <RowDefinition Height="*"/>   <!-- Liste / Leer-Zustand -->
             </Grid.RowDefinitions>
 
-            <!-- â”€â”€ Leer-Zustand â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <StackPanel
                 Grid.Row="1"
                 Spacing="12"
@@ -185,11 +182,13 @@
                     Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                     HorizontalAlignment="Center"/>
                 <TextBlock
+                    x:Uid="Startup_NoDataTitle"
                     Text="Noch keine Aufzeichnung vorhanden"
                     Style="{StaticResource SubtitleTextBlockStyle}"
                     HorizontalAlignment="Center"/>
                 <TextBlock
-                    Text="Klicke oben auf â€žAktivierenâ€œ, um den Bootmonitor einzurichten. Beim nÃ¤chsten Windows-Start werden die ersten 60 Sekunden Netzwerkverbindungen als SYSTEM aufgezeichnet â€“ noch vor der Anmeldung."
+                    x:Uid="Startup_NoDataDescription"
+                    Text="Klicke oben auf „Aktivieren“, um den Bootmonitor einzurichten. Beim nächsten Windows-Start werden die ersten 60 Sekunden Netzwerkverbindungen als SYSTEM aufgezeichnet – noch vor der Anmeldung."
                     Style="{StaticResource BodyTextBlockStyle}"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     TextWrapping="WrapWholeWords"
@@ -198,7 +197,6 @@
                     TextAlignment="Center"/>
             </StackPanel>
 
-            <!-- â”€â”€ Spalten-Kopfzeile (resizable) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <Border
                 Grid.Row="0"
                 Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
@@ -223,39 +221,38 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0"  Text="Zeit"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="0"  x:Uid="Startup_ColumnTime" Text="Zeit"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="1"  Tag="OffsetWidth"   Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="2"  Text="Prozess"   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="2"  x:Uid="Startup_ColumnProcess" Text="Prozess"   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="3"  Tag="ProcessWidth"  Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="4"  Text="PID"       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="4"  x:Uid="Startup_ColumnPid" Text="PID"       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="5"  Tag="PidWidth"      Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="6"  Text="Proto"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="6"  x:Uid="Startup_ColumnProto" Text="Proto"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="7"  Tag="ProtocolWidth" Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="8"  Text="Lokal"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="8"  x:Uid="Startup_ColumnLocal" Text="Lokal"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="9"  Tag="LocalWidth"    Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
 
-                    <TextBlock Grid.Column="10" Text="Remote"    Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Grid.Column="10" x:Uid="Startup_ColumnRemote" Text="Remote"    Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                     <Border Grid.Column="11" Tag="RemoteWidth"   Style="{StaticResource StartupColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                         <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                     </Border>
                 </Grid>
             </Border>
 
-            <!-- â”€â”€ Verbindungsliste â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
             <ListView
                 Grid.Row="1"
                 x:Name="ConnectionList"

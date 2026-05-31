@@ -60,7 +60,7 @@
                         <TextBlock Text="{x:Bind ViewModel.TotalConnectionCount, Mode=OneWay}"
                                    FontSize="22" FontWeight="SemiBold"
                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock Text="Verbindungen" FontSize="11"
+                        <TextBlock x:Uid="Tel_CardConnections" Text="Verbindungen" FontSize="11"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
@@ -73,7 +73,7 @@
                         <TextBlock Text="{x:Bind ViewModel.UniqueHostCount, Mode=OneWay}"
                                    FontSize="22" FontWeight="SemiBold"
                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock Text="Eindeutige Hosts" FontSize="11"
+                        <TextBlock x:Uid="Tel_CardUniqueHosts" Text="Eindeutige Hosts" FontSize="11"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
@@ -86,7 +86,7 @@
                         <TextBlock Text="{x:Bind ViewModel.ActiveServiceCount, Mode=OneWay}"
                                    FontSize="22" FontWeight="SemiBold"
                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock Text="Aktive Dienste" FontSize="11"
+                        <TextBlock x:Uid="Tel_CardActiveServices" Text="Aktive Dienste" FontSize="11"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
@@ -99,13 +99,14 @@
                         <TextBlock Text="{x:Bind ViewModel.TotalBytesDisplay, Mode=OneWay}"
                                    FontSize="22" FontWeight="SemiBold"
                                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
-                        <TextBlock Text="Übertragen" FontSize="11"
+                        <TextBlock x:Uid="Tel_CardTransferred" Text="Übertragen" FontSize="11"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Suchfeld -->
                 <AutoSuggestBox
+                    x:Uid="Tel_SearchBox"
                     Grid.Column="5"
                     Width="260"
                     PlaceholderText="Hostname, IP oder Prozess filtern …"
@@ -115,18 +116,20 @@
 
                 <!-- Export HTML -->
                 <Button
+                    x:Uid="Tel_ExportReportButton"
                     Grid.Column="6"
                     VerticalAlignment="Center"
                     Command="{x:Bind ViewModel.ExportReportCommand}"
                     ToolTipService.ToolTip="HTML-Bericht in 'Downloads' speichern und öffnen">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE74E;" FontSize="14"/>
-                        <TextBlock Text="HTML-Bericht"/>
+                        <TextBlock x:Uid="Tel_ExportReportLabel" Text="HTML-Bericht"/>
                     </StackPanel>
                 </Button>
 
                 <!-- Löschen -->
                 <Button
+                    x:Uid="Tel_ClearDataButton"
                     Grid.Column="7"
                     VerticalAlignment="Center"
                     Command="{x:Bind ViewModel.ClearDataCommand}"
@@ -162,7 +165,7 @@
                         CornerRadius="12">
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <FontIcon Glyph="&#xE71C;" FontSize="11"/>
-                            <TextBlock Text="Alle" FontSize="12"/>
+                            <TextBlock x:Uid="Tel_ChipAll" Text="Alle" FontSize="12"/>
                         </StackPanel>
                     </Button>
 
@@ -235,39 +238,39 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0"  Text="Dienst"    VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderService" Grid.Column="0"  Text="Dienst"    VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="1"  Tag="ServiceWidth"  Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="2"  Text="Hostname"  VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderHostname" Grid.Column="2"  Text="Hostname"  VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="3"  Tag="HostnameWidth" Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="4"  Text="Prozess"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderProcess" Grid.Column="4"  Text="Prozess"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="5"  Tag="ProcessWidth" Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="6"  Text="PID"       VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderPid" Grid.Column="6"  Text="PID"       VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="7"  Tag="PidWidth"    Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="8"  Text="Remote-IP" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderRemoteIp" Grid.Column="8"  Text="Remote-IP" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="9"  Tag="RemoteIpWidth" Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="10" Text="Land"      VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderCountry" Grid.Column="10" Text="Land"      VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="11" Tag="CountryWidth" Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="12" Text="Treffer"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderHits" Grid.Column="12" Text="Treffer"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="13" Tag="HitsWidth"   Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="14" Text="Bytes"     VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderBytes" Grid.Column="14" Text="Bytes"     VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
                 <Border    Grid.Column="15" Tag="BytesWidth"   Style="{StaticResource TelemetryColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
-                <TextBlock Grid.Column="16" Text="Zuletzt"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
+                <TextBlock x:Uid="Tel_HeaderLastSeen" Grid.Column="16" Text="Zuletzt"   VerticalAlignment="Center" FontWeight="SemiBold" FontSize="11"/>
             </Grid>
         </Border>
 
@@ -284,15 +287,14 @@
                 <FontIcon Glyph="&#xE9D5;" FontSize="56"
                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                           HorizontalAlignment="Center"/>
-                <TextBlock Text="Noch keine Telemetrie-Verbindungen erkannt"
+                <TextBlock x:Uid="Tel_EmptyTitle" Text="Noch keine Telemetrie-Verbindungen erkannt"
                            Style="{StaticResource SubtitleTextBlockStyle}"
                            HorizontalAlignment="Center"/>
-                <TextBlock TextWrapping="WrapWholeWords" TextAlignment="Center"
+                <TextBlock x:Uid="Tel_EmptyBody" TextWrapping="WrapWholeWords" TextAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                           Style="{StaticResource BodyTextBlockStyle}">
-                    Verbindungen zu Microsoft-Telemetrie-Endpunkten (DiagTrack, Windows Update, Defender, OneDrive …) werden hier in Echtzeit angezeigt. Die Aufzeichnung läuft im Hintergrund – sobald Windows einen passenden Endpunkt kontaktiert, erscheint er hier.
-                </TextBlock>
-                <TextBlock Text="Tipp: DNS-Auflösung benötigt Administrator-Rechte (ETW). Ohne sie werden Hosts nur per IP-Range erkannt."
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           Text="Verbindungen zu Microsoft-Telemetrie-Endpunkten (DiagTrack, Windows Update, Defender, OneDrive …) werden hier in Echtzeit angezeigt. Die Aufzeichnung läuft im Hintergrund – sobald Windows einen passenden Endpunkt kontaktiert, erscheint er hier."/>
+                <TextBlock x:Uid="Tel_EmptyHint" Text="Tipp: DNS-Auflösung benötigt Administrator-Rechte (ETW). Ohne sie werden Hosts nur per IP-Range erkannt."
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorTertiaryBrush}"
                            TextWrapping="WrapWholeWords" TextAlignment="Center"/>

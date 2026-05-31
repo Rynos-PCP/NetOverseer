@@ -25,9 +25,17 @@ public sealed partial class SettingsViewModel : ObservableObject
     private const string AutostartKey       = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
     private const string AutostartValueName = "NetOverseer";
 
+    /// <summary>
+    /// Geplante Aufgabe für den App-Autostart. Da die App Administratorrechte
+    /// benötigt (siehe app.manifest), kann ein HKCU-Run-Eintrag sie beim Anmelden
+    /// nicht starten – Run-Einträge lösen keine UAC-Anhebung aus. Eine geplante
+    /// Aufgabe mit höchster Berechtigungsstufe (RL HIGHEST) und ONLOGON-Trigger
+    /// startet die App dagegen ohne UAC-Abfrage elevated.
+    /// </summary>
+    private const string AppAutostartTaskName = "NetOverseer-AppAutostart";
+
     private static readonly int[] RetentionValues = [7, 30, 90, 0];
 
-    // â”€â”€ Allgemein â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     /// <summary>0=Deutsch, 1=Englisch</summary>
     [ObservableProperty] private int  _languageIndex = 0;
     /// <summary>0=System, 1=Hell, 2=Dunkel</summary>
@@ -35,23 +43,22 @@ public sealed partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private bool _startWithWindows;
     /// <summary>0=7d, 1=30d, 2=90d, 3=Unbegrenzt</summary>
     [ObservableProperty] private int  _dataRetentionIndex = 1;
+    /// <summary>Warnung ausblenden, wenn die GeoLite2-Datenbank fehlt.</summary>
+    [ObservableProperty] private bool _hideGeoDbMissingWarning;
 
-    // â”€â”€ Ãœberwachung â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     /// <summary>0=IpHelper, 1=Wfp</summary>
     [ObservableProperty] private int    _captureMethodIndex = 0;
     [ObservableProperty] private double _pollingIntervalMs = 500;
     [ObservableProperty] private bool   _showPrivateConnections;
     [ObservableProperty] private string _ignoredProcessesText = string.Empty;
 
-    // â”€â”€ Reputation & APIs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    // Nur fÃ¼r Code-Behind-Initialisierung lesbar; Schreiben Ã¼ber Code-Behind-Events
+    // Nur für Code-Behind-Initialisierung lesbar; Schreiben über Code-Behind-Events
     public string AbuseIpDbApiKey    { get; set; } = string.Empty;
     public string MaxMindLicenseKey  { get; set; } = string.Empty;
     [ObservableProperty] private bool   _offlineMode;
     [ObservableProperty] private double _blocklistUpdateIntervalDays = 7;
     [ObservableProperty] private double _maxDailyAbuseIpDbRequests = 1000;
 
-    // â”€â”€ Benachrichtigungen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     [ObservableProperty] private bool   _notifyOnNewUnknownConnection;
     [ObservableProperty] private bool   _notifyOnLowReputation = true;
     [ObservableProperty] private double _minReputationScoreForAlert = 20;
@@ -60,13 +67,10 @@ public sealed partial class SettingsViewModel : ObservableObject
     [ObservableProperty] private double _quietHoursStartHour = 22;
     [ObservableProperty] private double _quietHoursEndHour = 8;
 
-    // â”€â”€ Autostart-Ãœberwachung â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     [ObservableProperty] private bool _isStartupMonitoringEnabled;
 
-    // â”€â”€ Status â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     [ObservableProperty] private string _statusMessage = string.Empty;
 
-    // â”€â”€ Berechnete Properties â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     public bool IsCaptureMethodIpHelper => CaptureMethodIndex == 0;
     public bool IsOfflineModeDisabled   => !OfflineMode;
     public string PollingIntervalMsDisplay        => $"{PollingIntervalMs:F0} ms";
@@ -126,7 +130,6 @@ public sealed partial class SettingsViewModel : ObservableObject
         LoadFromService();
     }
 
-    // â”€â”€ Laden â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private void LoadFromService()
     {
@@ -143,6 +146,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             0  => 3,
             _  => 1
         };
+        HideGeoDbMissingWarning = s.HideGeoDbMissingWarning;
 
         // Ãœberwachung
         CaptureMethodIndex = s.CaptureMethod == "Wfp" ? 1 : 0;
@@ -150,7 +154,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         ShowPrivateConnections = s.ShowPrivateConnections;
         IgnoredProcessesText = string.Join(Environment.NewLine, s.IgnoredProcesses);
 
-        // Reputation & APIs (Keys entschlÃ¼sseln â€” fÃ¼r Code-Behind-Initialisierung)
+        // Reputation & APIs (Keys entschlüsseln für Code-Behind-Initialisierung)
         AbuseIpDbApiKey   = _settingsService.GetAbuseIpDbApiKey() ?? string.Empty;
         MaxMindLicenseKey = _settingsService.GetMaxMindLicenseKey() ?? string.Empty;
         OfflineMode = s.OfflineMode;
@@ -170,7 +174,6 @@ public sealed partial class SettingsViewModel : ObservableObject
         _isInitializing = false;
     }
 
-    // â”€â”€ Speichern â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     [RelayCommand]
     private void SaveSettings()
@@ -184,6 +187,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             s.Theme            = ThemeIndex switch { 1 => "Light", 2 => "Dark", _ => "System" };
             s.DataRetentionDays = RetentionValues[(uint)DataRetentionIndex < (uint)RetentionValues.Length
                 ? DataRetentionIndex : 1];
+            s.HideGeoDbMissingWarning = HideGeoDbMissingWarning;
 
             // Ãœberwachung
             s.CaptureMethod         = CaptureMethodIndex == 1 ? "Wfp" : "IpHelper";
@@ -216,10 +220,7 @@ public sealed partial class SettingsViewModel : ObservableObject
             _settingsService.SetMaxMindLicenseKey(
                 string.IsNullOrWhiteSpace(MaxMindLicenseKey) ? null : MaxMindLicenseKey);
 
-            // Windows-Autostart (Registry)
-            SetWindowsAutostart(StartWithWindows);
-
-            StatusMessage = "âœ“ Einstellungen gespeichert";
+            StatusMessage = "œ“ Einstellungen gespeichert";
         }
         catch (Exception ex)
         {
@@ -228,7 +229,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         }
     }
 
-    // â”€â”€ Autostart-Ãœberwachung (Task Scheduler Service) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Autostart-Überwachung (Task Scheduler Service) 
 
     partial void OnIsStartupMonitoringEnabledChanged(bool value)
     {
@@ -251,7 +252,7 @@ public sealed partial class SettingsViewModel : ObservableObject
         }
     }
 
-    // â”€â”€ Sonstige Commands â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // Sonstige Commands    
 
     [RelayCommand]
     private void OpenDataFolder()
@@ -259,40 +260,160 @@ public sealed partial class SettingsViewModel : ObservableObject
         var dir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "NetOverseer");
-        Directory.CreateDirectory(dir);
-        Process.Start(new ProcessStartInfo(dir) { UseShellExecute = true });
+        OpenFolderInExplorer(dir);
     }
 
-    // â”€â”€ Windows-Autostart (Registry, HKCU) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    /// <summary>Öffnet den GeoIP-Ordner, in den die GeoLite2-City.mmdb gehört.</summary>
+    [RelayCommand]
+    private void OpenGeoIpFolder()
+    {
+        var dir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "NetOverseer", "geoip");
+        OpenFolderInExplorer(dir);
+    }
+
+    /// <summary>
+    /// Stellt sicher, dass der Ordner existiert, und öffnet ihn im Explorer.
+    /// Da die App elevated läuft, wird explorer.exe explizit mit dem Pfad als
+    /// Argument gestartet – ShellExecute auf einen gerade erstellten Ordner aus
+    /// einem elevated Prozess schlägt sonst mit „Pfad nicht verfügbar" fehl.
+    /// </summary>
+    private void OpenFolderInExplorer(string dir)
+    {
+        try
+        {
+            Directory.CreateDirectory(dir);
+            Process.Start(new ProcessStartInfo("explorer.exe", $"\"{dir}\"")
+            {
+                UseShellExecute = true,
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ordner konnte nicht geöffnet werden: {Dir}", dir);
+        }
+    }
+
+    //  Windows-Autostart (geplante Aufgabe, ONLOGON / RL HIGHEST)  
+
+    /// <summary>
+    /// Wendet die Autostart-Einstellung sofort an (wie der Überwachungs-Schalter).
+    /// Schlägt das Setzen fehl, wird der Schalter auf den tatsächlichen Zustand
+    /// zurückgesetzt.
+    /// </summary>
+    partial void OnStartWithWindowsChanged(bool value)
+    {
+        if (_isInitializing) return;
+
+        if (!SetWindowsAutostart(value))
+        {
+            _isInitializing = true;
+            StartWithWindows = IsRegisteredAutostart();
+            _isInitializing = false;
+        }
+    }
 
     private static bool IsRegisteredAutostart()
     {
+        // Bevorzugt: geplante Aufgabe (läuft elevated via ONLOGON / RL HIGHEST).
+        if (QueryScheduledTaskExists(AppAutostartTaskName))
+            return true;
+
+        // Abwärtskompatibel: veralteter HKCU-Run-Eintrag aus früheren Versionen.
         using var key = Registry.CurrentUser.OpenSubKey(AutostartKey, writable: false);
         return key?.GetValue(AutostartValueName) is not null;
     }
 
-    private static void SetWindowsAutostart(bool enable)
+    /// <summary>
+    /// Aktiviert/deaktiviert den App-Autostart über eine geplante Aufgabe und
+    /// entfernt dabei stets einen evtl. vorhandenen veralteten HKCU-Run-Eintrag.
+    /// </summary>
+    private bool SetWindowsAutostart(bool enable)
+    {
+        // Etwaigen veralteten HKCU-Run-Eintrag entfernen (funktionierte nie für
+        // die elevated App).
+        RemoveLegacyRunEntry();
+
+        if (enable)
+        {
+            var exePath = Environment.ProcessPath;
+            if (string.IsNullOrEmpty(exePath))
+                return false;
+
+            // ONLOGON ohne /RU läuft im interaktiven Token des sich anmeldenden
+            // Benutzers; /RL HIGHEST hebt elevated an (ohne UAC-Abfrage), /F
+            // überschreibt eine bestehende Aufgabe.
+            var ok = RunSchtasks(
+                "/Create",
+                "/TN", AppAutostartTaskName,
+                "/TR", $"\"{exePath}\"",
+                "/SC", "ONLOGON",
+                "/RL", "HIGHEST",
+                "/F");
+
+            if (!ok)
+                _logger.LogWarning("Autostart-Aufgabe konnte nicht erstellt werden.");
+            return ok;
+        }
+
+        // Deaktivieren: Aufgabe löschen (Erfolg auch, wenn sie nicht existierte).
+        RunSchtasks("/Delete", "/TN", AppAutostartTaskName, "/F");
+        return true;
+    }
+
+    private static void RemoveLegacyRunEntry()
     {
         try
         {
             using var key = Registry.CurrentUser.OpenSubKey(AutostartKey, writable: true);
-            if (key is null) return;
+            key?.DeleteValue(AutostartValueName, throwOnMissingValue: false);
+        }
+        catch { /* nicht kritisch */ }
+    }
 
-            if (enable)
-            {
-                var exePath = Environment.ProcessPath ?? string.Empty;
-                if (!string.IsNullOrEmpty(exePath))
-                    key.SetValue(AutostartValueName, $"\"{exePath}\"");
-            }
-            else
-            {
-                key.DeleteValue(AutostartValueName, throwOnMissingValue: false);
-            }
-        }
-        catch
+    private static bool QueryScheduledTaskExists(string taskName)
+    {
+        try
         {
-            // Registry-Schreibfehler ist nicht kritisch
+            var psi = new ProcessStartInfo
+            {
+                FileName               = "schtasks.exe",
+                CreateNoWindow         = true,
+                UseShellExecute        = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError  = true,
+            };
+            psi.ArgumentList.Add("/Query");
+            psi.ArgumentList.Add("/TN"); psi.ArgumentList.Add(taskName);
+
+            using var proc = Process.Start(psi)!;
+            proc.WaitForExit();
+            return proc.ExitCode == 0;
         }
+        catch { return false; }
+    }
+
+    private static bool RunSchtasks(params string[] args)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName               = "schtasks.exe",
+                CreateNoWindow         = true,
+                UseShellExecute        = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError  = true,
+            };
+            foreach (var a in args)
+                psi.ArgumentList.Add(a);
+
+            using var proc = Process.Start(psi)!;
+            proc.WaitForExit();
+            return proc.ExitCode == 0;
+        }
+        catch { return false; }
     }
 }
 

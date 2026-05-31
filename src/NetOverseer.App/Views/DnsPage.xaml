@@ -23,6 +23,7 @@
 
         <!-- ════ Warn-Banner ════ -->
         <InfoBar
+            x:Uid="Dns_StatusBanner"
             Grid.Row="0"
             IsOpen="{x:Bind ViewModel.ShowStatusBanner, Mode=OneWay}"
             IsClosable="False"
@@ -30,7 +31,8 @@
             Title="DNS-Überwachung inaktiv"
             Message="{x:Bind ViewModel.StatusText, Mode=OneWay}">
             <InfoBar.ActionButton>
-                <Button Content="Erneut starten"
+                <Button x:Uid="Dns_RestartBanner"
+                        Content="Erneut starten"
                         Command="{x:Bind ViewModel.RestartCaptureCommand}"/>
             </InfoBar.ActionButton>
         </InfoBar>
@@ -45,7 +47,8 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1" CornerRadius="6" Padding="12,8">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Gesamt"
+                    <TextBlock x:Uid="Dns_TotalLabel"
+                               Text="Gesamt"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock Text="{x:Bind ViewModel.TotalCount, Mode=OneWay}"
@@ -58,7 +61,8 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1" CornerRadius="6" Padding="12,8">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Tracker"
+                    <TextBlock x:Uid="Dns_TrackerLabel"
+                               Text="Tracker"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="#FFC8641E"/>
                     <TextBlock Text="{x:Bind ViewModel.TrackerCount, Mode=OneWay}"
@@ -71,7 +75,8 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1" CornerRadius="6" Padding="12,8">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Telemetrie"
+                    <TextBlock x:Uid="Dns_TelemetryLabel"
+                               Text="Telemetrie"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="#FF3264C8"/>
                     <TextBlock Text="{x:Bind ViewModel.TelemetryCount, Mode=OneWay}"
@@ -84,7 +89,8 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1" CornerRadius="6" Padding="12,8">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="CDN"
+                    <TextBlock x:Uid="Dns_CdnLabel"
+                               Text="CDN"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <TextBlock Text="{x:Bind ViewModel.CdnCount, Mode=OneWay}"
@@ -98,7 +104,8 @@
                     BorderThickness="1" CornerRadius="6" Padding="12,8"
                     Visibility="{x:Bind ViewModel.SuspiciousCountVisibility, Mode=OneWay}">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Verdächtig"
+                    <TextBlock x:Uid="Dns_SuspiciousLabel"
+                               Text="Verdächtig"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="#FFC83232"/>
                     <TextBlock Text="{x:Bind ViewModel.SuspiciousCount, Mode=OneWay}"
@@ -113,7 +120,8 @@
                     BorderThickness="1" CornerRadius="6" Padding="12,8"
                     MinWidth="110">
                 <StackPanel Spacing="2">
-                    <TextBlock Text="Rate (Roh)"
+                    <TextBlock x:Uid="Dns_RateLabel"
+                               Text="Rate (Roh)"
                                Style="{StaticResource CaptionTextBlockStyle}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     <StackPanel Orientation="Horizontal" Spacing="4">
@@ -145,11 +153,11 @@
 
                 <TextBlock VerticalAlignment="Center" FontSize="12"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                    <Run Text="ETW-Roh:"/>
+                    <Run x:Uid="Dns_DiagEtwRaw" Text="ETW-Roh:"/>
                     <Run Text="{x:Bind ViewModel.EventsReceived, Mode=OneWay}" FontWeight="SemiBold"/>
-                    <Run Text="  •  Akzeptiert:"/>
+                    <Run x:Uid="Dns_DiagAccepted" Text="  •  Akzeptiert:"/>
                     <Run Text="{x:Bind ViewModel.EventsAccepted, Mode=OneWay}" FontWeight="SemiBold"/>
-                    <Run Text="  •  Laufzeit:"/>
+                    <Run x:Uid="Dns_DiagRuntime" Text="  •  Laufzeit:"/>
                     <Run Text="{x:Bind ViewModel.RuntimeText, Mode=OneWay}" FontWeight="SemiBold"/>
                 </TextBlock>
 
@@ -163,12 +171,15 @@
             <StackPanel Grid.Column="1"
                         Orientation="Horizontal" Spacing="8"
                         VerticalAlignment="Center">
-                <Button Content="Self-Test"
+                <Button x:Uid="Dns_SelfTestButton"
+                        Content="Self-Test"
                         Command="{x:Bind ViewModel.RunSelfTestCommand}"
                         ToolTipService.ToolTip="Führt eine Test-DNS-Anfrage aus und prüft, ob sie in der Pipeline ankommt."/>
-                <Button Content="Neu starten"
+                <Button x:Uid="Dns_RestartButton"
+                        Content="Neu starten"
                         Command="{x:Bind ViewModel.RestartCaptureCommand}"/>
-                <Button Content="Leeren"
+                <Button x:Uid="Dns_ClearButton"
+                        Content="Leeren"
                         Command="{x:Bind ViewModel.ClearCommand}"/>
             </StackPanel>
         </Grid>
@@ -177,6 +188,7 @@
         <Grid Grid.Row="3" Padding="16,4,16,8"
               ColumnDefinitions="*,Auto">
             <TextBox
+                x:Uid="Dns_FilterBox"
                 Grid.Column="0"
                 PlaceholderText="Domain oder Prozess filtern …"
                 Text="{x:Bind ViewModel.FilterText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -213,7 +225,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="ZEIT"
+                <TextBlock x:Uid="Dns_HeaderTime" Grid.Column="0" Text="ZEIT"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>
@@ -226,7 +238,7 @@
                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="2" Text="PROZESS"
+                <TextBlock x:Uid="Dns_HeaderProcess" Grid.Column="2" Text="PROZESS"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>
@@ -239,7 +251,7 @@
                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="4" Text="DOMAIN"
+                <TextBlock x:Uid="Dns_HeaderDomain" Grid.Column="4" Text="DOMAIN"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>
@@ -252,7 +264,7 @@
                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="6" Text="TYP"
+                <TextBlock x:Uid="Dns_HeaderType" Grid.Column="6" Text="TYP"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>
@@ -265,7 +277,7 @@
                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="8" Text="KATEGORIE"
+                <TextBlock x:Uid="Dns_HeaderCategory" Grid.Column="8" Text="KATEGORIE"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>
@@ -278,7 +290,7 @@
                                Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="10" Text="AUFGELÖSTE IPS"
+                <TextBlock x:Uid="Dns_HeaderResolvedIps" Grid.Column="10" Text="AUFGELÖSTE IPS"
                            Style="{StaticResource CaptionTextBlockStyle}"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                            VerticalAlignment="Center"/>

@@ -125,6 +125,7 @@ public sealed class SettingsService : ISettingsService
         PollingIntervalMs              = src.PollingIntervalMs,
         IgnoredProcesses               = [.. src.IgnoredProcesses],
         ShowPrivateConnections         = src.ShowPrivateConnections,
+        HideGeoDbMissingWarning        = src.HideGeoDbMissingWarning,
         AbuseIpDbApiKey                = src.AbuseIpDbApiKey,
         MaxMindLicenseKey              = src.MaxMindLicenseKey,
         OfflineMode                    = src.OfflineMode,

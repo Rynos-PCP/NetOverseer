@@ -76,6 +76,14 @@
                             </StackPanel>
                         </Border>
 
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="12">
+                                <TextBlock x:Uid="Section_HideGeoDbWarning" Text="GeoLite2-Warnung ausblenden" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="HideGeoDbWarning_Desc" Text="Blendet den Hinweis aus, wenn die GeoLite2-Datenbank nicht gefunden wurde." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <ToggleSwitch x:Uid="HideGeoDbWarningSwitch" IsOn="{x:Bind ViewModel.HideGeoDbMissingWarning, Mode=TwoWay}" OnContent="Aktiv" OffContent="Inaktiv"/>
+                            </StackPanel>
+                        </Border>
+
                     </StackPanel>
                 </ScrollViewer>
             </PivotItem>
@@ -88,8 +96,8 @@
                         <!-- Capture-Steuerung (Start / Stop / Neustart) -->
                         <Border Style="{StaticResource SettingsCardStyle}">
                             <StackPanel Spacing="12">
-                                <TextBlock Text="Aufnahme-Steuerung" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-                                <TextBlock Text="Die Aufnahme wird beim Programmstart automatisch aktiviert. Hier kann sie bei Bedarf manuell gesteuert werden."
+                                <TextBlock x:Uid="Set_CaptureControlTitle" Text="Aufnahme-Steuerung" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="Set_CaptureControlDesc" Text="Die Aufnahme wird beim Programmstart automatisch aktiviert. Hier kann sie bei Bedarf manuell gesteuert werden."
                                            TextWrapping="Wrap"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
 
@@ -114,20 +122,20 @@
                                             Style="{StaticResource AccentButtonStyle}">
                                         <StackPanel Orientation="Horizontal" Spacing="6">
                                             <FontIcon Glyph="&#xE768;" FontSize="14"/>
-                                            <TextBlock Text="Starten"/>
+                                            <TextBlock x:Uid="Set_CaptureStart" Text="Starten"/>
                                         </StackPanel>
                                     </Button>
                                     <Button Command="{x:Bind CaptureViewModel.StopCaptureCommand}"
                                             IsEnabled="{x:Bind CaptureViewModel.IsCapturing, Mode=OneWay}">
                                         <StackPanel Orientation="Horizontal" Spacing="6">
                                             <FontIcon Glyph="&#xE71A;" FontSize="14"/>
-                                            <TextBlock Text="Stoppen"/>
+                                            <TextBlock x:Uid="Set_CaptureStop" Text="Stoppen"/>
                                         </StackPanel>
                                     </Button>
                                     <Button Command="{x:Bind CaptureViewModel.RestartCaptureCommand}">
                                         <StackPanel Orientation="Horizontal" Spacing="6">
                                             <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                                            <TextBlock Text="Neu starten"/>
+                                            <TextBlock x:Uid="Set_CaptureRestart" Text="Neu starten"/>
                                         </StackPanel>
                                     </Button>
                                 </StackPanel>
@@ -350,6 +358,32 @@
                             <StackPanel Spacing="12">
                                 <TextBlock x:Uid="Section_DataSecurity" Text="Datensicherheit" Style="{StaticResource BodyStrongTextBlockStyle}"/>
                                 <TextBlock x:Uid="DataSecurity_Desc" Text="API-Schlüssel werden in der Konfigurationsdatei gespeichert. Das Verzeichnis %AppData% ist durch Windows-ACL benutzerspezifisch geschützt und nur für den aktuellen Benutzer zugänglich." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </PivotItem>
+
+            <!-- Tab 7: Anleitungen -->
+            <PivotItem x:Uid="Tab_Help" Header="Anleitungen">
+                <ScrollViewer Padding="0,8,0,8">
+                    <StackPanel Spacing="8">
+
+                        <TextBlock x:Uid="Help_Intro" Text="Hier finden Sie Schritt-für-Schritt-Anleitungen zur Einrichtung optionaler Funktionen." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Margin="4,0,0,4"/>
+
+                        <Border Style="{StaticResource SettingsCardStyle}">
+                            <StackPanel Spacing="10">
+                                <TextBlock x:Uid="Help_GeoTitle" Text="GeoLite2-Datenbank (Geolokalisierung) einrichten" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                                <TextBlock x:Uid="Help_GeoIntro" Text="Um Länder- und Standortinformationen für IP-Adressen anzuzeigen, wird die kostenlose MaxMind-GeoLite2-City-Datenbank benötigt." TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock x:Uid="Help_GeoStep1" Text="1. Erstellen Sie ein kostenloses MaxMind-Konto." TextWrapping="Wrap"/>
+                                <TextBlock x:Uid="Help_GeoStep2" Text="2. Laden Sie die GeoLite2-City-Datenbank im .mmdb-Format herunter." TextWrapping="Wrap"/>
+                                <TextBlock x:Uid="Help_GeoStep3" Text="3. Kopieren Sie GeoLite2-City.mmdb in den GeoIP-Ordner." TextWrapping="Wrap"/>
+                                <TextBlock x:Uid="Help_GeoStep4" Text="4. Starten Sie NetOverseer neu." TextWrapping="Wrap"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <HyperlinkButton x:Uid="Help_GeoMaxMindLink" Content="MaxMind GeoLite2 öffnen" NavigateUri="https://www.maxmind.com/en/geolite2/signup"/>
+                                    <Button x:Uid="Help_OpenGeoFolder" Command="{x:Bind ViewModel.OpenGeoIpFolderCommand}" Content="GeoIP-Ordner öffnen"/>
+                                </StackPanel>
                             </StackPanel>
                         </Border>
 

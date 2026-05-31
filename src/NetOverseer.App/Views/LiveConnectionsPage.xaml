@@ -62,6 +62,7 @@
              GeoLite2-Datenbank fehlt – InfoBar
              ═══════════════════════════════════════════════════════════ -->
         <InfoBar
+            x:Uid="Live_GeoDbWarning"
             Grid.Row="0"
             IsOpen="{x:Bind ViewModel.ShowGeoDbMissingWarning, Mode=OneWay}"
             IsClosable="True"
@@ -90,6 +91,7 @@
                 VerticalAlignment="Center">
 
                 <AutoSuggestBox
+                    x:Uid="Live_SearchBox"
                     Width="320"
                     PlaceholderText="Suche nach App, IP oder Hostname …"
                     QueryIcon="Find"
@@ -118,6 +120,7 @@
                     VerticalAlignment="Center"
                     IsChecked="{x:Bind ViewModel.FilterIpV4Active, Mode=OneWay}"
                     Command="{x:Bind ViewModel.ToggleIpV4FilterCommand}"
+                    x:Uid="Live_FilterIpV4"
                     ToolTipService.ToolTip="Nur IPv4-Verbindungen anzeigen (erneuter Klick zeigt wieder beide)"/>
 
                 <ToggleButton
@@ -126,9 +129,11 @@
                     VerticalAlignment="Center"
                     IsChecked="{x:Bind ViewModel.FilterIpV6Active, Mode=OneWay}"
                     Command="{x:Bind ViewModel.ToggleIpV6FilterCommand}"
+                    x:Uid="Live_FilterIpV6"
                     ToolTipService.ToolTip="Nur IPv6-Verbindungen anzeigen (erneuter Klick zeigt wieder beide)"/>
 
                 <ToggleButton
+                    x:Uid="Live_FilterTelemetry"
                     Content="&#x1FA9F; Telemetrie"
                     VerticalAlignment="Center"
                     IsChecked="{x:Bind ViewModel.FilterTelemetryActive, Mode=OneWay}"
@@ -138,17 +143,19 @@
                 <AppBarSeparator Margin="4,0"/>
 
                 <Button
+                    x:Uid="Live_ClearFilter"
                     Content="Filter zurücksetzen"
                     VerticalAlignment="Center"
                     Command="{x:Bind ViewModel.ClearFilterCommand}"/>
 
                 <!-- Erweiterte Filter (Flyout-Popup mit Status/Reputation/Land/Port/Ignore) -->
                 <Button
+                    x:Uid="Live_AdvancedFilterButton"
                     VerticalAlignment="Center"
                     ToolTipService.ToolTip="Detaillierte Filter (Status, Reputation, Land, Port, Ignorieren …)">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE71C;" FontSize="13"/>
-                        <TextBlock Text="Erweiterte Filter" VerticalAlignment="Center"/>
+                        <TextBlock x:Uid="Live_AdvancedFilterLabel" Text="Erweiterte Filter" VerticalAlignment="Center"/>
                         <!-- Aktiv-Punkt: leuchtet wenn ein Flyout-Filter gesetzt ist -->
                         <Ellipse
                             Width="8" Height="8"
@@ -170,12 +177,13 @@
                                 <StackPanel Spacing="14" MinWidth="420">
 
                                     <TextBlock
+                                        x:Uid="Live_AdvancedFilterTitle"
                                         Text="Erweiterte Filter"
                                         Style="{ThemeResource SubtitleTextBlockStyle}"/>
 
                                     <!-- Verbindungs-Status -->
                                     <StackPanel Spacing="4">
-                                        <TextBlock Text="Verbindungs-Status" FontWeight="SemiBold"/>
+                                        <TextBlock x:Uid="Live_SectionConnectionStatus" Text="Verbindungs-Status" FontWeight="SemiBold"/>
                                         <ItemsRepeater ItemsSource="{x:Bind ViewModel.StateFilters}">
                                             <ItemsRepeater.Layout>
                                                 <StackLayout Orientation="Vertical" Spacing="2"/>
@@ -192,7 +200,7 @@
 
                                     <!-- Reputation -->
                                     <StackPanel Spacing="4">
-                                        <TextBlock Text="Reputation" FontWeight="SemiBold"/>
+                                        <TextBlock x:Uid="Live_SectionReputation" Text="Reputation" FontWeight="SemiBold"/>
                                         <ItemsRepeater ItemsSource="{x:Bind ViewModel.ReputationFilters}">
                                             <ItemsRepeater.Layout>
                                                 <StackLayout Orientation="Vertical" Spacing="2"/>
@@ -209,7 +217,7 @@
 
                                     <!-- Infrastruktur -->
                                     <StackPanel Spacing="4">
-                                        <TextBlock Text="Infrastruktur" FontWeight="SemiBold"/>
+                                        <TextBlock x:Uid="Live_SectionInfrastructure" Text="Infrastruktur" FontWeight="SemiBold"/>
                                         <ItemsRepeater ItemsSource="{x:Bind ViewModel.InfrastructureFilters}">
                                             <ItemsRepeater.Layout>
                                                 <StackLayout Orientation="Vertical" Spacing="2"/>
@@ -227,16 +235,19 @@
                                     <!-- Frei-Text-Filter -->
                                     <StackPanel Spacing="6">
                                         <TextBox
+                                            x:Uid="Live_CountryCodeFilter"
                                             Header="Länder-Codes (kommagetrennt, z. B. DE, US)"
                                             PlaceholderText="z. B. DE, US, IE"
                                             Text="{x:Bind ViewModel.CountryCodeFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <TextBox
+                                            x:Uid="Live_PortFilter"
                                             Header="Ports (kommagetrennt)"
                                             PlaceholderText="z. B. 80, 443, 8080"
                                             Text="{x:Bind ViewModel.PortFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
                                         <TextBox
+                                            x:Uid="Live_IgnoreProcessFilter"
                                             Header="Prozesse ignorieren (Teilstring, kommagetrennt)"
                                             PlaceholderText="z. B. svchost, OneDrive"
                                             Text="{x:Bind ViewModel.IgnoreProcessFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -244,6 +255,7 @@
 
                                     <!-- Schnell-Toggles -->
                                     <ToggleSwitch
+                                        x:Uid="Live_HidePrivateToggle"
                                         Header="Private/Loopback-Adressen ausblenden"
                                         OffContent="Anzeigen"
                                         OnContent="Ausblenden"
@@ -252,6 +264,7 @@
                                     <!-- Aktions-Leiste -->
                                     <Grid Margin="0,4,0,0">
                                         <Button
+                                            x:Uid="Live_ResetAdvanced"
                                             HorizontalAlignment="Left"
                                             Content="Erweiterte zurücksetzen"
                                             Command="{x:Bind ViewModel.ResetExtendedFiltersCommand}"/>
@@ -301,42 +314,42 @@
                     <ColumnDefinition Width="{Binding Layout.StateWidth,      Source={StaticResource ColumnLayout}, Mode=OneWay}"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="1"  Text="Anwendung"  Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="1"  x:Uid="Live_ColApplication" Text="Anwendung"  Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="2"  Tag="AppWidth"        Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="3"  Text="Proto"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="3"  x:Uid="Live_ColProtocol" Text="Proto"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="4"  Tag="ProtocolWidth"   Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="5"  Text="Lokal"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="5"  x:Uid="Live_ColLocal" Text="Lokal"      Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="6"  Tag="LocalWidth"      Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="7"  Text="Remote"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="7"  x:Uid="Live_ColRemote" Text="Remote"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="8"  Tag="RemoteWidth"     Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="9"  Text="Hostname"   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="9"  x:Uid="Live_ColHostname" Text="Hostname"   Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="10" Tag="HostnameWidth"   Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="11" Text="Land"       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="11" x:Uid="Live_ColCountry" Text="Land"       Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="12" Tag="CountryWidth"    Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="13" Text="Reputation" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="13" x:Uid="Live_ColReputation" Text="Reputation" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                 <Border Grid.Column="14" Tag="ReputationWidth" Style="{StaticResource ColumnSplitterStyle}" ManipulationDelta="ColumnSplitter_ManipulationDelta" PointerEntered="ColumnSplitter_PointerEntered" PointerExited="ColumnSplitter_PointerExited">
                     <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                 </Border>
 
-                <TextBlock Grid.Column="15" Text="Status"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="15" x:Uid="Live_ColStatus" Text="Status"     Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
             </Grid>
         </Border>
 
@@ -509,7 +522,7 @@
                       BorderThickness="0,0,0,1"
                       ColumnDefinitions="*,Auto,Auto">
                     <StackPanel Grid.Column="0" Spacing="2" VerticalAlignment="Center">
-                        <TextBlock Text="Firewall-Regeln"
+                        <TextBlock x:Uid="Live_FirewallRulesTitle" Text="Firewall-Regeln"
                                    Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                         <TextBlock Text="{x:Bind ViewModel.AppFirewallRules.AppName, Mode=OneWay}"
                                    Style="{ThemeResource CaptionTextBlockStyle}"
@@ -518,6 +531,7 @@
                     </StackPanel>
 
                     <Button Grid.Column="1"
+                            x:Uid="Live_RefreshRulesButton"
                             Style="{ThemeResource SubtleButtonStyle}"
                             ToolTipService.ToolTip="Aktualisieren"
                             Command="{x:Bind ViewModel.AppFirewallRules.RefreshCommand}">
@@ -525,6 +539,7 @@
                     </Button>
 
                     <Button Grid.Column="2"
+                            x:Uid="Live_CloseRulesButton"
                             Style="{ThemeResource SubtleButtonStyle}"
                             ToolTipService.ToolTip="Schließen"
                             Command="{x:Bind ViewModel.AppFirewallRules.CloseCommand}">
@@ -559,7 +574,7 @@
                                 Spacing="10"
                                 Visibility="{x:Bind ViewModel.AppFirewallRules.IsLoading, Mode=OneWay}">
                         <ProgressRing IsActive="True" Width="36" Height="36"/>
-                        <TextBlock Text="Lade Firewall-Regeln …"
+                        <TextBlock x:Uid="Live_LoadingRules" Text="Lade Firewall-Regeln …"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
 
@@ -571,10 +586,10 @@
                                 Visibility="{x:Bind ViewModel.AppFirewallRules.HasNoRules, Mode=OneWay}">
                         <FontIcon Glyph="&#xE946;" FontSize="28"
                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="Keine Firewall-Regeln gefunden"
+                        <TextBlock x:Uid="Live_NoRulesTitle" Text="Keine Firewall-Regeln gefunden"
                                    Style="{ThemeResource BodyStrongTextBlockStyle}"
                                    HorizontalAlignment="Center"/>
-                        <TextBlock Text="Für diese Anwendung sind in der Windows-Firewall keine Regeln hinterlegt."
+                        <TextBlock x:Uid="Live_NoRulesDescription" Text="Für diese Anwendung sind in der Windows-Firewall keine Regeln hinterlegt."
                                    TextWrapping="Wrap"
                                    TextAlignment="Center"
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -645,6 +660,7 @@
 
                                     <!-- Löschen -->
                                     <Button Grid.Column="3" Grid.RowSpan="2"
+                                            x:Uid="Live_RemoveRuleButton"
                                             Command="{x:Bind RemoveCommand}"
                                             Style="{StaticResource SubtleButtonStyle}"
                                             VerticalAlignment="Center"

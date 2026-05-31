@@ -7,6 +7,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using NetOverseer.App.Services;
 using NetOverseer.App.ViewModels;
 using Windows.ApplicationModel.DataTransfer;
 
@@ -93,7 +94,7 @@ public sealed partial class ApplicationsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text = "Aktivität anzeigen",
+            Text = LocalizationService.GetString("AppMenu_ShowActivity"),
             Icon = new FontIcon { Glyph = "\uE7C4" },
             Command = new RelayCommandWrapper(async () =>
                 await ViewModel.OpenForAppAsync(item, ApplicationsDetailsSection.Activity))
@@ -101,7 +102,7 @@ public sealed partial class ApplicationsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text = "Firewall-Regeln anzeigen",
+            Text = LocalizationService.GetString("AppMenu_ShowFirewall"),
             Icon = new FontIcon { Glyph = "\uE72E" },
             Command = new RelayCommandWrapper(async () =>
                 await ViewModel.OpenForAppAsync(item, ApplicationsDetailsSection.Firewall))
@@ -109,7 +110,7 @@ public sealed partial class ApplicationsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text = "Eigenschaften anzeigen",
+            Text = LocalizationService.GetString("AppMenu_ShowProperties"),
             Icon = new FontIcon { Glyph = "\uE946" },
             Command = new RelayCommandWrapper(async () =>
                 await ViewModel.OpenForAppAsync(item, ApplicationsDetailsSection.Properties))
@@ -119,7 +120,7 @@ public sealed partial class ApplicationsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text = "Pfad kopieren",
+            Text = LocalizationService.GetString("AppMenu_CopyPath"),
             Icon = new FontIcon { Glyph = "\uE8C8" },
             Command = new RelayCommandWrapper(() =>
             {
@@ -132,7 +133,7 @@ public sealed partial class ApplicationsPage : Page
 
         var openFolderItem = new MenuFlyoutItem
         {
-            Text = "Im Explorer öffnen",
+            Text = LocalizationService.GetString("AppMenu_OpenExplorer"),
             Icon = new FontIcon { Glyph = "\uE838" },
             Command = new RelayCommandWrapper(() =>
             {
@@ -153,7 +154,9 @@ public sealed partial class ApplicationsPage : Page
 
         flyout.Items.Add(new MenuFlyoutSeparator());
 
-        var trustText = item.IsTrusted ? "Vertrauen entfernen" : "Als vertraut markieren";
+        var trustText = item.IsTrusted
+            ? LocalizationService.GetString("AppMenu_RemoveTrust")
+            : LocalizationService.GetString("AppMenu_AddTrust");
         flyout.Items.Add(new MenuFlyoutItem
         {
             Text = trustText,
@@ -169,7 +172,7 @@ public sealed partial class ApplicationsPage : Page
 
         var blockItem = new MenuFlyoutItem
         {
-            Text = "App in Firewall blockieren",
+            Text = LocalizationService.GetString("AppMenu_BlockFirewall"),
             Icon = new FontIcon { Glyph = "\uE72E" },
             Command = new RelayCommandWrapper(async () => await ViewModel.BlockAppAsync(item))
         };

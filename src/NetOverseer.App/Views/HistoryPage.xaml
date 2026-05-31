@@ -40,7 +40,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Grid.Column="0" Spacing="2">
-                    <TextBlock Text="Verlauf" Style="{ThemeResource TitleTextBlockStyle}"/>
+                    <TextBlock x:Uid="Hist_Title" Text="Verlauf" Style="{ThemeResource TitleTextBlockStyle}"/>
                     <TextBlock Text="{x:Bind ViewModel.RangeSummaryText, Mode=OneWay}"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                TextWrapping="WrapWholeWords"/>
@@ -50,19 +50,20 @@
                         VerticalAlignment="Center" Style="{ThemeResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                        <TextBlock Text="Aktualisieren"/>
+                        <TextBlock x:Uid="Hist_RefreshButton" Text="Aktualisieren"/>
                     </StackPanel>
                 </Button>
 
                 <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                    <TextBlock Text="Zeitraum:" VerticalAlignment="Center"
+                    <TextBlock x:Uid="Hist_TimeRangeLabel" Text="Zeitraum:" VerticalAlignment="Center"
                                Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"/>
-                    <RadioButton x:Name="RbHour" Content="Letzte Stunde" Tag="LastHour" GroupName="TimeRange" Checked="TimeRange_Checked"/>
-                    <RadioButton x:Name="RbDay" Content="24 Stunden" Tag="Last24Hours" GroupName="TimeRange" Checked="TimeRange_Checked" IsChecked="True"/>
-                    <RadioButton x:Name="RbWeek" Content="7 Tage" Tag="LastWeek" GroupName="TimeRange" Checked="TimeRange_Checked"/>
+                    <RadioButton x:Uid="Hist_RbHour" x:Name="RbHour" Content="Letzte Stunde" Tag="LastHour" GroupName="TimeRange" Checked="TimeRange_Checked"/>
+                    <RadioButton x:Uid="Hist_RbDay" x:Name="RbDay" Content="24 Stunden" Tag="Last24Hours" GroupName="TimeRange" Checked="TimeRange_Checked" IsChecked="True"/>
+                    <RadioButton x:Uid="Hist_RbWeek" x:Name="RbWeek" Content="7 Tage" Tag="LastWeek" GroupName="TimeRange" Checked="TimeRange_Checked"/>
                 </StackPanel>
 
                 <TextBox Grid.Row="1" Grid.Column="1"
+                         x:Uid="Hist_AppFilter"
                          Text="{x:Bind ViewModel.AppFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          PlaceholderText="Anwendung filtern …"
                          VerticalAlignment="Center"
@@ -72,7 +73,7 @@
 
         <Pivot Grid.Row="1" Margin="12,12,12,0">
 
-            <PivotItem Header="Aktivitaet">
+            <PivotItem x:Uid="Hist_ActivityPivot" Header="Aktivitaet">
                 <Grid>
                     <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
                                   Width="48" Height="48"
@@ -83,7 +84,7 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="12">
                         <FontIcon Glyph="&#xE81C;" FontSize="48"
                                   Foreground="{ThemeResource SystemControlForegroundBaseLowBrush}"/>
-                        <TextBlock Text="Keine Verbindungen im gewählten Zeitraum."
+                        <TextBlock x:Uid="Hist_NoConnections" Text="Keine Verbindungen im gewählten Zeitraum."
                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                    HorizontalAlignment="Center"/>
                     </StackPanel>
@@ -102,39 +103,39 @@
 
                                 <Border Grid.Column="0" Style="{StaticResource HistoryMetricCardStyle}">
                                     <StackPanel Spacing="6">
-                                        <TextBlock Text="Aktive Apps" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Uid="Hist_ActiveApps" Text="Aktive Apps" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
                                         <TextBlock Text="{x:Bind ViewModel.ActiveAppsRange, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}"/>
-                                        <TextBlock Text="mit Aktivitaet im gewaehlten Zeitraum" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                        <TextBlock x:Uid="Hist_ActiveAppsCaption" Text="mit Aktivitaet im gewaehlten Zeitraum" TextWrapping="WrapWholeWords" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Grid.Column="1" Style="{StaticResource HistoryMetricCardStyle}">
                                     <StackPanel Spacing="6">
-                                        <TextBlock Text="Verbindungen" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Uid="Hist_Connections" Text="Verbindungen" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
                                         <TextBlock Text="{x:Bind ViewModel.TotalConnectionsRange, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}"/>
-                                        <TextBlock Text="gesamt im aktuellen Fenster" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                        <TextBlock x:Uid="Hist_ConnectionsCaption" Text="gesamt im aktuellen Fenster" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Grid.Column="2" Style="{StaticResource HistoryMetricCardStyle}">
                                     <StackPanel Spacing="6">
-                                        <TextBlock Text="Datenvolumen" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Uid="Hist_DataVolume" Text="Datenvolumen" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
                                         <TextBlock Text="{x:Bind ViewModel.TotalDataRangeDisplay, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}"/>
-                                        <TextBlock Text="Upload plus Download" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                        <TextBlock x:Uid="Hist_DataVolumeCaption" Text="Upload plus Download" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Grid.Column="3" Style="{StaticResource HistoryMetricCardStyle}">
                                     <StackPanel Spacing="6">
-                                        <TextBlock Text="Auffaellige Apps" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Uid="Hist_SuspiciousApps" Text="Auffaellige Apps" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
                                         <TextBlock Text="{x:Bind ViewModel.SuspiciousAppsRange, Mode=OneWay}" Style="{ThemeResource TitleTextBlockStyle}" Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
-                                        <TextBlock Text="mit niedriger Reputation" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                        <TextBlock x:Uid="Hist_SuspiciousAppsCaption" Text="mit niedriger Reputation" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                     </StackPanel>
                                 </Border>
 
                                 <Border Grid.Column="4" Style="{StaticResource HistoryMetricCardStyle}">
                                     <StackPanel Spacing="6">
-                                        <TextBlock Text="Staerkste App" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
+                                        <TextBlock x:Uid="Hist_BusiestApp" Text="Staerkste App" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="13"/>
                                         <TextBlock Text="{x:Bind ViewModel.BusiestAppName, Mode=OneWay}" Style="{ThemeResource BodyStrongTextBlockStyle}" TextTrimming="CharacterEllipsis"/>
                                         <TextBlock Text="{x:Bind ViewModel.BusiestAppTrafficDisplay, Mode=OneWay}" FontSize="20" FontWeight="SemiBold"/>
                                         <TextBlock Text="{x:Bind ViewModel.LastRefreshDisplay, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
@@ -151,8 +152,8 @@
                                 <Border Grid.Column="0" Style="{StaticResource HistorySurfaceCardStyle}">
                                     <StackPanel Spacing="12">
                                         <StackPanel Spacing="2">
-                                            <TextBlock Text="Zeitleiste nach Anwendung" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                            <TextBlock Text="Sortiert nach Verbindungen und Datenvolumen. Ein Klick auf eine Zeile oeffnet die Detailansicht." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
+                                            <TextBlock x:Uid="Hist_TimelineTitle" Text="Zeitleiste nach Anwendung" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                            <TextBlock x:Uid="Hist_TimelineSubtitle" Text="Sortiert nach Verbindungen und Datenvolumen. Ein Klick auf eine Zeile oeffnet die Detailansicht." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
                                         </StackPanel>
 
                                         <ItemsControl ItemsSource="{x:Bind ViewModel.AppActivities, Mode=OneWay}">
@@ -190,7 +191,7 @@
 
                                                             <Border Grid.Column="2" Grid.RowSpan="2" Padding="10,8" CornerRadius="8" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}">
                                                                 <StackPanel Spacing="6">
-                                                                    <TextBlock Text="Aktivitaetsprofil" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
+                                                                    <TextBlock x:Uid="Hist_ActivityProfile" Text="Aktivitaetsprofil" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12"/>
                                                                     <ItemsControl ItemsSource="{x:Bind Buckets, Mode=OneTime}">
                                                                         <ItemsControl.ItemsPanel>
                                                                             <ItemsPanelTemplate>
@@ -239,8 +240,8 @@
                                     <Border Style="{StaticResource HistorySurfaceCardStyle}">
                                         <StackPanel Spacing="12">
                                             <StackPanel Spacing="2">
-                                                <TextBlock Text="Top-Apps im Zeitraum" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                                <TextBlock Text="Die aktivsten Anwendungen im aktuell gewaehlten Fenster." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
+                                                <TextBlock x:Uid="Hist_TopAppsTitle" Text="Top-Apps im Zeitraum" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                                <TextBlock x:Uid="Hist_TopAppsSubtitle" Text="Die aktivsten Anwendungen im aktuell gewaehlten Fenster." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
                                             </StackPanel>
 
                                             <ItemsControl ItemsSource="{x:Bind ViewModel.TopRangeActivities, Mode=OneWay}">
@@ -271,8 +272,8 @@
                                     <Border Style="{StaticResource HistorySurfaceCardStyle}">
                                         <StackPanel Spacing="12">
                                             <StackPanel Spacing="2">
-                                                <TextBlock Text="Frische Warnhinweise" Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                                                <TextBlock Text="Auffaellige Ziele mit schlechter Reputation im gleichen Zeitraum." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
+                                                <TextBlock x:Uid="Hist_FreshWarningsTitle" Text="Frische Warnhinweise" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                                <TextBlock x:Uid="Hist_FreshWarningsSubtitle" Text="Auffaellige Ziele mit schlechter Reputation im gleichen Zeitraum." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
                                             </StackPanel>
 
                                             <ItemsControl ItemsSource="{x:Bind ViewModel.RangeSuspiciousConnections, Mode=OneWay}">
@@ -304,7 +305,7 @@
                 </Grid>
             </PivotItem>
 
-            <PivotItem Header="7-Tage-Bericht">
+            <PivotItem x:Uid="Hist_WeeklyPivot" Header="7-Tage-Bericht">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Padding="0,4,0,16" Spacing="16">
 
@@ -319,13 +320,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Grid.Column="0" Spacing="4">
-                                    <TextBlock Text="Wochenbericht" Style="{ThemeResource TitleTextBlockStyle}"/>
-                                    <TextBlock Text="Verdichtete 7-Tage-Uebersicht fuer Verkehrsaufkommen, datenintensive Anwendungen und auffaellige Ziele." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
+                                    <TextBlock x:Uid="Hist_WeeklyTitle" Text="Wochenbericht" Style="{ThemeResource TitleTextBlockStyle}"/>
+                                    <TextBlock x:Uid="Hist_WeeklySubtitle" Text="Verdichtete 7-Tage-Uebersicht fuer Verkehrsaufkommen, datenintensive Anwendungen und auffaellige Ziele." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="WrapWholeWords"/>
                                 </StackPanel>
                                 <Button Grid.Column="1" Command="{x:Bind ViewModel.ExportWeeklyReportCommand}" HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <FontIcon Glyph="&#xE896;" FontSize="14"/>
-                                        <TextBlock Text="Als HTML exportieren"/>
+                                        <TextBlock x:Uid="Hist_ExportHtml" Text="Als HTML exportieren"/>
                                     </StackPanel>
                                 </Button>
                             </Grid>
@@ -342,7 +343,7 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{x:Bind ViewModel.TotalConnectionsWeek, Mode=OneWay}"
                                                Style="{ThemeResource TitleTextBlockStyle}"/>
-                                    <TextBlock Text="Verbindungen (7 Tage)"
+                                    <TextBlock x:Uid="Hist_ConnectionsWeek" Text="Verbindungen (7 Tage)"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                FontSize="13"/>
                                 </StackPanel>
@@ -352,7 +353,7 @@
                                 <StackPanel Spacing="4">
                                     <TextBlock Text="{x:Bind ViewModel.TotalDataWeekDisplay, Mode=OneWay}"
                                                Style="{ThemeResource TitleTextBlockStyle}"/>
-                                    <TextBlock Text="Datenvolumen gesamt"
+                                    <TextBlock x:Uid="Hist_DataVolumeTotal" Text="Datenvolumen gesamt"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                FontSize="13"/>
                                 </StackPanel>
@@ -363,7 +364,7 @@
                                     <TextBlock Text="{x:Bind ViewModel.SuspiciousCountWeek, Mode=OneWay}"
                                                Style="{ThemeResource TitleTextBlockStyle}"
                                                Foreground="{ThemeResource SystemFillColorCriticalBrush}"/>
-                                    <TextBlock Text="Apps mit verdächtigen Verbindungen"
+                                    <TextBlock x:Uid="Hist_SuspiciousAppsWeek" Text="Apps mit verdächtigen Verbindungen"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                                FontSize="13"/>
                                 </StackPanel>
@@ -378,7 +379,7 @@
 
                             <Border Grid.Column="0" Style="{StaticResource HistorySurfaceCardStyle}">
                                 <StackPanel Spacing="12">
-                                    <TextBlock Text="Top 5 datenintensive Anwendungen" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                    <TextBlock x:Uid="Hist_Top5Data" Text="Top 5 datenintensive Anwendungen" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                     <ItemsControl ItemsSource="{x:Bind ViewModel.TopApps, Mode=OneWay}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="vm:WeeklyAppEntryViewModel">
@@ -408,7 +409,7 @@
 
                             <Border Grid.Column="1" Style="{StaticResource HistorySurfaceCardStyle}">
                                 <StackPanel Spacing="12">
-                                    <TextBlock Text="Top 5 verdaechtige Verbindungen" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                                    <TextBlock x:Uid="Hist_Top5Suspicious" Text="Top 5 verdaechtige Verbindungen" Style="{ThemeResource SubtitleTextBlockStyle}"/>
                                     <ItemsControl ItemsSource="{x:Bind ViewModel.SuspiciousConnections, Mode=OneWay}">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="vm:SuspiciousConnectionViewModel">

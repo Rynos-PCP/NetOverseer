@@ -19,7 +19,7 @@
     <RepositoryType>git</RepositoryType>
 
     <!-- Versioning. Override per release with -p:Version=x.y.z. -->
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
 
     <PackageReadmeFile Condition="Exists('$(MSBuildThisFileDirectory)README.md')">README.md</PackageReadmeFile>
   </PropertyGroup>

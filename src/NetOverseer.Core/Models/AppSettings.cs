@@ -10,8 +10,8 @@ public sealed class AppSettings
 {
     // ── Allgemein ────────────────────────────────────────────────────────────
 
-    /// <summary>Anzeigesprache: "de" (Deutsch) oder "en" (Englisch).</summary>
-    public string Language { get; set; } = "de";
+    /// <summary>Anzeigesprache: "de" (Deutsch) oder "en" (Englisch). Standard: Englisch.</summary>
+    public string Language { get; set; } = "en";
 
     /// <summary>Farbschema: "System" / "Light" / "Dark".</summary>
     public string Theme { get; set; } = "System";
@@ -35,6 +35,9 @@ public sealed class AppSettings
 
     /// <summary>Private/Loopback-Verbindungen in der Live-Ansicht anzeigen.</summary>
     public bool ShowPrivateConnections { get; set; } = false;
+
+    /// <summary>Warnung ausblenden, wenn die GeoLite2-Datenbank nicht gefunden wurde.</summary>
+    public bool HideGeoDbMissingWarning { get; set; } = false;
 
     // ── Reputation & APIs ────────────────────────────────────────────────────
 

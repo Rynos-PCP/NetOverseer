@@ -132,7 +132,7 @@ public sealed partial class LiveConnectionsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text    = "Details anzeigen",
+            Text    = Services.LocalizationService.GetString("ConnMenu_ShowDetails"),
             Icon    = new FontIcon { Glyph = "\uE946" },
             Command = new RelayCommandWrapper(async () => await ShowDetailDialogAsync(item))
         });
@@ -141,21 +141,21 @@ public sealed partial class LiveConnectionsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text    = "Hostname kopieren",
+            Text    = Services.LocalizationService.GetString("ConnMenu_CopyHostname"),
             Icon    = new FontIcon { Glyph = "\uE8C8" },
             Command = item.CopyHostnameCommand
         });
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text    = "Remote-Adresse kopieren",
+            Text    = Services.LocalizationService.GetString("ConnMenu_CopyRemote"),
             Icon    = new FontIcon { Glyph = "\uE8C8" },
             Command = item.CopyRemoteAddressCommand
         });
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text    = "Whois öffnen",
+            Text    = Services.LocalizationService.GetString("ConnMenu_OpenWhois"),
             Icon    = new FontIcon { Glyph = "\uE774" },
             Command = item.OpenWhoisCommand
         });
@@ -164,7 +164,7 @@ public sealed partial class LiveConnectionsPage : Page
 
         var fwItem = new MenuFlyoutItem
         {
-            Text    = "Firewall-Regeln für diese App laden",
+            Text    = Services.LocalizationService.GetString("ConnMenu_LoadFirewall"),
             Icon    = new FontIcon { Glyph = "\uE72E" }, // Shield
             Command = new RelayCommandWrapper(async () => await ShowAppFirewallRulesAsync(item))
         };
@@ -174,7 +174,7 @@ public sealed partial class LiveConnectionsPage : Page
 
         flyout.Items.Add(new MenuFlyoutItem
         {
-            Text    = "Verbindung blockieren …",
+            Text    = Services.LocalizationService.GetString("ConnMenu_BlockConnection"),
             Icon    = new FontIcon { Glyph = "\uE72E" },
             Command = new RelayCommandWrapper(async () => await ShowBlockDialogAsync(item))
         });

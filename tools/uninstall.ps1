@@ -196,6 +196,14 @@ if ((Get-ItemProperty -Path $autorunKeyLM -Name 'NetOverseer' -ErrorAction Silen
     Write-Success "Autostart (HKLM Run) entry removed"
 }
 
+# Remove the app autostart scheduled task (ONLOGON / RL HIGHEST)
+$appAutostartTask = 'NetOverseer-AppAutostart'
+& schtasks.exe /Query /TN $appAutostartTask 2>$null | Out-Null
+if ($LASTEXITCODE -eq 0) {
+    & schtasks.exe /Delete /TN $appAutostartTask /F | Out-Null
+    Write-Success "Autostart scheduled task '$appAutostartTask' removed"
+}
+
 # ─────────────────────────────────────────────────────────────────
 # Done
 # ─────────────────────────────────────────────────────────────────

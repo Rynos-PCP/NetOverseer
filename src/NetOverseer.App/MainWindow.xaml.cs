@@ -59,10 +59,10 @@ public sealed partial class MainWindow : Window
         // alle XAML-Elemente über x:Uid in der neuen Sprache.
         var dialog = new ContentDialog
         {
-            Title   = "Sprache geändert",
-            Content = "Die Sprache wurde gespeichert. Starten Sie die App neu, damit die neue Sprache vollständig wirksam wird.",
-            PrimaryButtonText = "Jetzt neu starten",
-            CloseButtonText   = "Später",
+            Title   = LocalizationService.GetString("LanguageChanged_Title"),
+            Content = LocalizationService.GetString("LanguageChanged_Message"),
+            PrimaryButtonText = LocalizationService.GetString("LanguageChanged_RestartButton"),
+            CloseButtonText   = LocalizationService.GetString("LanguageChanged_LaterButton"),
             XamlRoot = Content.XamlRoot
         };
 

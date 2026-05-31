@@ -11,13 +11,15 @@
 
             <!-- ═══════════════ Admin-Warnung ═══════════════ -->
             <InfoBar Grid.Row="0"
+                     x:Uid="Fw_AdminWarning"
                      IsOpen="{x:Bind ViewModel.ShowAdminWarning, Mode=OneWay}"
                      IsClosable="False"
                      Severity="Warning"
                      Title="Eingeschränkte Funktionalität"
                      Message="Firewall-Regeln können nur mit Administrator-Rechten verwaltet werden.">
                 <InfoBar.ActionButton>
-                    <Button Content="Als Administrator starten"
+                    <Button x:Uid="Fw_RunAsAdmin"
+                            Content="Als Administrator starten"
                             Command="{x:Bind ViewModel.RestartAsAdministratorCommand}"/>
                 </InfoBar.ActionButton>
             </InfoBar>
@@ -31,6 +33,7 @@
                   BorderThickness="0,0,0,1">
 
                 <AutoSuggestBox Grid.Column="0"
+                                x:Uid="Fw_SearchBox"
                                 PlaceholderText="Regeln suchen (Name, Pfad, IP) …"
                                 Text="{x:Bind ViewModel.SearchText, Mode=TwoWay}"
                                 QueryIcon="Find"
@@ -38,12 +41,13 @@
                                 HorizontalAlignment="Left"/>
 
                 <Button Grid.Column="1"
+                        x:Uid="Fw_RefreshButton"
                         Margin="8,0,0,0"
                         Command="{x:Bind ViewModel.RefreshCommand}"
                         ToolTipService.ToolTip="Aktualisieren">
                     <StackPanel Orientation="Horizontal" Spacing="6">
                         <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                        <TextBlock Text="Aktualisieren"/>
+                        <TextBlock x:Uid="Fw_RefreshLabel" Text="Aktualisieren"/>
                     </StackPanel>
                 </Button>
 
@@ -62,7 +66,7 @@
                      SelectionChanged="TabView_SelectionChanged">
 
                 <!-- ─── Tab 1: NetOverseer-Regeln ─── -->
-                <TabViewItem Header="NetOverseer-Regeln" IsClosable="False">
+                <TabViewItem x:Uid="Fw_TabNetOverseer" Header="NetOverseer-Regeln" IsClosable="False">
                     <!-- Äußeres Single-Cell-Grid: garantiert volle Stretch-Fläche für Empty-State -->
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid RowDefinitions="Auto,Auto,*">
@@ -73,19 +77,19 @@
                               Background="{ThemeResource LayerFillColorAltBrush}"
                               BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                               BorderThickness="0,0,0,1">
-                            <TextBlock Grid.Column="1" Text="REGELNAME"
+                            <TextBlock Grid.Column="1" x:Uid="Fw_ColRuleName" Text="REGELNAME"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Grid.Column="2" Text="AKTION"
+                            <TextBlock Grid.Column="2" x:Uid="Fw_ColAction" Text="AKTION"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Grid.Column="3" Text="PROTOKOLL"
+                            <TextBlock Grid.Column="3" x:Uid="Fw_ColProtocol" Text="PROTOKOLL"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Grid.Column="4" Text="ZIEL"
+                            <TextBlock Grid.Column="4" x:Uid="Fw_ColTarget" Text="ZIEL"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Grid.Column="5" Text="AKTIV"
+                            <TextBlock Grid.Column="5" x:Uid="Fw_ColActive" Text="AKTIV"
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </Grid>
@@ -148,6 +152,7 @@
                                                           MinWidth="0"
                                                           VerticalAlignment="Center"/>
                                             <Button Grid.Column="6"
+                                                    x:Uid="Fw_EditRuleTooltip"
                                                     Command="{x:Bind EditCommand}"
                                                     Style="{StaticResource SubtleButtonStyle}"
                                                     VerticalAlignment="Center"
@@ -155,6 +160,7 @@
                                                 <FontIcon Glyph="&#xE70F;" FontSize="12"/>
                                             </Button>
                                             <Button Grid.Column="7"
+                                                    x:Uid="Fw_RemoveRuleTooltip"
                                                     Command="{x:Bind RemoveCommand}"
                                                     Style="{StaticResource SubtleButtonStyle}"
                                                     VerticalAlignment="Center"
@@ -174,11 +180,11 @@
                                         Visibility="{x:Bind ViewModel.HasNoNetOverseerRules, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE945;" FontSize="56"
                                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                                <TextBlock Text="Keine NetOverseer-Regeln vorhanden"
+                                <TextBlock x:Uid="Fw_EmptyNetOverseerTitle" Text="Keine NetOverseer-Regeln vorhanden"
                                            Style="{StaticResource SubtitleTextBlockStyle}"
                                            HorizontalAlignment="Center"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Blockieren Sie Anwendungen über die Live-Verbindungen, um eigene Regeln zu erstellen."
+                                <TextBlock x:Uid="Fw_EmptyNetOverseerHint" Text="Blockieren Sie Anwendungen über die Live-Verbindungen, um eigene Regeln zu erstellen."
                                            HorizontalAlignment="Center"
                                            TextAlignment="Center"
                                            TextWrapping="Wrap"
@@ -189,15 +195,9 @@
                 </TabViewItem>
 
                 <!-- ─── Tab 2: Verwaiste Regeln ─── -->
-                <TabViewItem Header="Verwaiste Regeln" IsClosable="False">
+                <TabViewItem x:Uid="Fw_TabOrphaned" Header="Verwaiste Regeln" IsClosable="False">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid RowDefinitions="Auto,*">
-                        <InfoBar Grid.Row="0"
-                                 IsOpen="True"
-                                 IsClosable="False"
-                                 Severity="Informational"
-                                 Message="Diese Regeln beziehen sich auf Anwendungen, die nicht mehr installiert sind."/>
-
                         <ListView Grid.Row="1"
                                   ItemsSource="{x:Bind ViewModel.OrphanedRules, Mode=OneWay}"
                                   SelectionMode="None">
@@ -232,10 +232,12 @@
                                                            FontWeight="SemiBold"/>
                                             </Border>
                                             <Button Grid.Column="2"
+                                                    x:Uid="Fw_EditButton"
                                                     Command="{x:Bind EditCommand}"
                                                     Margin="6,0,0,0"
                                                     Content="Bearbeiten"/>
                                             <Button Grid.Column="3"
+                                                    x:Uid="Fw_RemoveButton"
                                                     Command="{x:Bind RemoveCommand}"
                                                     Margin="6,0,0,0"
                                                     Content="Entfernen"
@@ -253,11 +255,11 @@
                                         Visibility="{x:Bind ViewModel.HasNoOrphanedRules, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE73E;" FontSize="56"
                                           Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                                <TextBlock Text="Keine verwaisten Regeln"
+                                <TextBlock x:Uid="Fw_EmptyOrphanedTitle" Text="Keine verwaisten Regeln"
                                            Style="{StaticResource SubtitleTextBlockStyle}"
                                            HorizontalAlignment="Center"
                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                                <TextBlock Text="Alle Firewall-Regeln verweisen auf vorhandene Anwendungen."
+                                <TextBlock x:Uid="Fw_EmptyOrphanedHint" Text="Alle Firewall-Regeln verweisen auf vorhandene Anwendungen."
                                            HorizontalAlignment="Center"
                                            TextAlignment="Center"
                                            TextWrapping="Wrap"
@@ -268,10 +270,11 @@
                 </TabViewItem>
 
                 <!-- ─── Tab 3: Alle Regeln ─── -->
-                <TabViewItem x:Name="AllRulesTab" Header="Alle Regeln" IsClosable="False">
+                <TabViewItem x:Name="AllRulesTab" x:Uid="Fw_TabAllRules" Header="Alle Regeln" IsClosable="False">
                     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                     <Grid RowDefinitions="Auto,Auto,*">
                         <InfoBar Grid.Row="0"
+                                 x:Uid="Fw_AllRulesInfo"
                                  IsOpen="True"
                                  IsClosable="False"
                                  Severity="Informational"
@@ -310,7 +313,7 @@
                                                                 Margin="8,0,0,0"
                                                                 VerticalAlignment="Center"
                                                                 Visibility="{x:Bind IsOrphaned}">
-                                                            <TextBlock Text="Verwaist" FontSize="10"/>
+                                                            <TextBlock x:Uid="Fw_OrphanedBadge" Text="Verwaist" FontSize="10"/>
                                                         </Border>
                                                     </Grid>
                                                 </Expander.Header>
@@ -362,6 +365,7 @@
                                                                               MinWidth="0"
                                                                               VerticalAlignment="Center"/>
                                                                 <Button Grid.Column="6"
+                                                                        x:Uid="Fw_EditTooltipAll"
                                                                         Command="{x:Bind EditCommand}"
                                                                         Style="{StaticResource SubtleButtonStyle}"
                                                                         VerticalAlignment="Center"
@@ -369,6 +373,7 @@
                                                                     <FontIcon Glyph="&#xE70F;" FontSize="11"/>
                                                                 </Button>
                                                                 <Button Grid.Column="7"
+                                                                        x:Uid="Fw_RemoveTooltipAll"
                                                                         Command="{x:Bind RemoveCommand}"
                                                                         Style="{StaticResource SubtleButtonStyle}"
                                                                         VerticalAlignment="Center"
@@ -393,11 +398,11 @@
                                     Visibility="{x:Bind ViewModel.HasNoAllRules, Mode=OneWay}">
                             <FontIcon Glyph="&#xE945;" FontSize="56"
                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
-                            <TextBlock Text="Keine Firewall-Regeln gefunden"
+                            <TextBlock x:Uid="Fw_EmptyAllTitle" Text="Keine Firewall-Regeln gefunden"
                                        Style="{StaticResource SubtitleTextBlockStyle}"
                                        HorizontalAlignment="Center"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            <TextBlock Text="Passt der Suchfilter eventuell nicht zu vorhandenen Regeln?"
+                            <TextBlock x:Uid="Fw_EmptyAllHint" Text="Passt der Suchfilter eventuell nicht zu vorhandenen Regeln?"
                                        HorizontalAlignment="Center"
                                        TextAlignment="Center"
                                        TextWrapping="Wrap"
@@ -428,13 +433,14 @@
                           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                           BorderThickness="0,0,0,1">
                         <StackPanel Grid.Column="0" Spacing="2">
-                            <TextBlock Text="Regel bearbeiten"
+                            <TextBlock x:Uid="Fw_EditPaneTitle" Text="Regel bearbeiten"
                                        Style="{StaticResource SubtitleTextBlockStyle}"/>
-                            <TextBlock Text="Detail-Konfiguration der Firewall-Regel."
+                            <TextBlock x:Uid="Fw_EditPaneSubtitle" Text="Detail-Konfiguration der Firewall-Regel."
                                        Style="{StaticResource CaptionTextBlockStyle}"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                         <Button Grid.Column="1"
+                                x:Uid="Fw_CloseTooltip"
                                 Command="{x:Bind ViewModel.CancelEditCommand}"
                                 Style="{StaticResource SubtleButtonStyle}"
                                 ToolTipService.ToolTip="Schließen">
@@ -452,12 +458,12 @@
                                      Message="{Binding EditErrorMessage, Mode=OneWay}"/>
 
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Name" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock x:Uid="Fw_FieldName" Text="Name" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <TextBox Text="{Binding EditName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
 
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Beschreibung" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock x:Uid="Fw_FieldDescription" Text="Beschreibung" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <TextBox Text="{Binding EditDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          AcceptsReturn="True"
                                          TextWrapping="Wrap"
@@ -465,35 +471,35 @@
                             </StackPanel>
 
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Anwendungspfad (leer = global)" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock x:Uid="Fw_FieldAppPath" Text="Anwendungspfad (leer = global)" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <TextBox Text="{Binding EditApplicationPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          FontFamily="Consolas"/>
                             </StackPanel>
 
                             <Grid ColumnDefinitions="*,12,*">
                                 <StackPanel Grid.Column="0" Spacing="4">
-                                    <TextBlock Text="Richtung" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                    <TextBlock x:Uid="Fw_FieldDirection" Text="Richtung" Style="{StaticResource CaptionTextBlockStyle}"/>
                                     <ComboBox SelectedIndex="{Binding EditDirectionIndex, Mode=TwoWay}"
                                               HorizontalAlignment="Stretch">
-                                        <ComboBoxItem Content="Eingehend"/>
-                                        <ComboBoxItem Content="Ausgehend"/>
+                                        <ComboBoxItem x:Uid="Fw_DirectionInbound" Content="Eingehend"/>
+                                        <ComboBoxItem x:Uid="Fw_DirectionOutbound" Content="Ausgehend"/>
                                     </ComboBox>
                                 </StackPanel>
                                 <StackPanel Grid.Column="2" Spacing="4">
-                                    <TextBlock Text="Aktion" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                    <TextBlock x:Uid="Fw_FieldAction" Text="Aktion" Style="{StaticResource CaptionTextBlockStyle}"/>
                                     <ComboBox SelectedIndex="{Binding EditActionIndex, Mode=TwoWay}"
                                               HorizontalAlignment="Stretch">
-                                        <ComboBoxItem Content="Erlauben"/>
-                                        <ComboBoxItem Content="Blockieren"/>
+                                        <ComboBoxItem x:Uid="Fw_ActionAllow" Content="Erlauben"/>
+                                        <ComboBoxItem x:Uid="Fw_ActionBlock" Content="Blockieren"/>
                                     </ComboBox>
                                 </StackPanel>
                             </Grid>
 
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Protokoll" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBlock x:Uid="Fw_FieldProtocol" Text="Protokoll" Style="{StaticResource CaptionTextBlockStyle}"/>
                                 <ComboBox SelectedIndex="{Binding EditProtocolIndex, Mode=TwoWay}"
                                           HorizontalAlignment="Stretch">
-                                    <ComboBoxItem Content="Alle"/>
+                                    <ComboBoxItem x:Uid="Fw_ProtocolAll" Content="Alle"/>
                                     <ComboBoxItem Content="TCP"/>
                                     <ComboBoxItem Content="UDP"/>
                                     <ComboBoxItem Content="ICMP"/>
@@ -502,27 +508,28 @@
 
                             <Grid ColumnDefinitions="*,12,*">
                                 <StackPanel Grid.Column="0" Spacing="4">
-                                    <TextBlock Text="Lokale Ports" Style="{StaticResource CaptionTextBlockStyle}"/>
-                                    <TextBox Text="{Binding EditLocalPorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBlock x:Uid="Fw_FieldLocalPorts" Text="Lokale Ports" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                    <TextBox x:Uid="Fw_LocalPortsPlaceholder" Text="{Binding EditLocalPorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              PlaceholderText="* oder 80,443"
                                              FontFamily="Consolas"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="2" Spacing="4">
-                                    <TextBlock Text="Remote-Ports" Style="{StaticResource CaptionTextBlockStyle}"/>
-                                    <TextBox Text="{Binding EditRemotePorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBlock x:Uid="Fw_FieldRemotePorts" Text="Remote-Ports" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                    <TextBox x:Uid="Fw_RemotePortsPlaceholder" Text="{Binding EditRemotePorts, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              PlaceholderText="* oder 443"
                                              FontFamily="Consolas"/>
                                 </StackPanel>
                             </Grid>
 
                             <StackPanel Spacing="4">
-                                <TextBlock Text="Remote-Adressen" Style="{StaticResource CaptionTextBlockStyle}"/>
-                                <TextBox Text="{Binding EditRemoteAddresses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                <TextBlock x:Uid="Fw_FieldRemoteAddresses" Text="Remote-Adressen" Style="{StaticResource CaptionTextBlockStyle}"/>
+                                <TextBox x:Uid="Fw_RemoteAddressesPlaceholder" Text="{Binding EditRemoteAddresses, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                          PlaceholderText="* oder 1.2.3.4, 10.0.0.0/8"
                                          FontFamily="Consolas"/>
                             </StackPanel>
 
-                            <ToggleSwitch Header="Regel aktiv"
+                            <ToggleSwitch x:Uid="Fw_RuleActiveToggle"
+                                          Header="Regel aktiv"
                                           IsOn="{Binding EditIsEnabled, Mode=TwoWay}"
                                           OnContent="Ein"
                                           OffContent="Aus"/>
@@ -536,9 +543,11 @@
                           BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                           BorderThickness="0,1,0,0">
                         <Button Grid.Column="1"
+                                x:Uid="Fw_CancelButton"
                                 Content="Abbrechen"
                                 Command="{x:Bind ViewModel.CancelEditCommand}"/>
                         <Button Grid.Column="2"
+                                x:Uid="Fw_SaveButton"
                                 Margin="8,0,0,0"
                                 Content="Speichern"
                                 Style="{StaticResource AccentButtonStyle}"

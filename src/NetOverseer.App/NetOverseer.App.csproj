@@ -7,6 +7,10 @@
     <RootNamespace>NetOverseer.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
+    <!-- Standard-/Fallback-Sprache der App (MRT/PRI). Englisch ist Standard und
+         wird verwendet, wenn für die gewählte Sprache kein Ressourcen-Eintrag existiert. -->
+    <DefaultLanguage>en-US</DefaultLanguage>
+
     <!--
       Unpackaged-Modus für Entwicklung/Debug.
       Kein MSIX nötig, App läuft direkt aus bin\x64\Debug\.

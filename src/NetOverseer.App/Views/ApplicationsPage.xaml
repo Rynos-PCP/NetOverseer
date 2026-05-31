@@ -57,6 +57,7 @@
               BorderThickness="0,0,0,1">
 
             <AutoSuggestBox
+                x:Uid="Apps_SearchPlaceholder"
                 Grid.Column="0"
                 Width="360"
                 QueryIcon="Find"
@@ -69,11 +70,12 @@
                     Command="{x:Bind ViewModel.RefreshCommand}">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                     <FontIcon Glyph="&#xE72C;" FontSize="14"/>
-                    <TextBlock Text="Aktualisieren"/>
+                    <TextBlock x:Uid="Apps_RefreshButton" Text="Aktualisieren"/>
                 </StackPanel>
             </Button>
 
             <ToggleSwitch Grid.Column="2"
+                          x:Uid="Apps_TrafficMetricsToggle"
                           Margin="10,0,0,0"
                           Header="Traffic-Metriken"
                           VerticalAlignment="Center"
@@ -91,7 +93,7 @@
             <Grid Visibility="{x:Bind ViewModel.LoadingVisibility, Mode=OneWay}">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
                     <ProgressRing IsActive="True" Width="38" Height="38"/>
-                    <TextBlock Text="Lade Anwendungen …"
+                    <TextBlock x:Uid="Apps_LoadingText" Text="Lade Anwendungen …"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                 </StackPanel>
             </Grid>
@@ -119,37 +121,37 @@
                                 <ColumnDefinition Width="{Binding Layout.BlockWidth, Source={StaticResource AppColumnLayout}, Mode=OneWay}"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="0" Text="Anwendung" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Grid.Column="0" x:Uid="Apps_ColumnApplication" Text="Anwendung" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <Border Grid.Column="1" Tag="NameWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="2" Text="Pfad" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Grid.Column="2" x:Uid="Apps_ColumnPath" Text="Pfad" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <Border Grid.Column="3" Tag="PathWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="4" Text="Upload" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="4" x:Uid="Apps_ColumnUpload" Text="Upload" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}"/>
                             <Border Grid.Column="5" Tag="UploadWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="6" Text="Download" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}"/>
+                            <TextBlock Grid.Column="6" x:Uid="Apps_ColumnDownload" Text="Download" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}"/>
                             <Border Grid.Column="7" Tag="DownloadWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited" Visibility="{x:Bind ViewModel.TrafficColumnVisibility, Mode=OneWay}">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="8" Text="Letzte Aktivität" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Grid.Column="8" x:Uid="Apps_ColumnLastActivity" Text="Letzte Aktivität" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <Border Grid.Column="9" Tag="LastSeenWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="10" Text="Vertrauen" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Grid.Column="10" x:Uid="Apps_ColumnTrust" Text="Vertrauen" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             <Border Grid.Column="11" Tag="TrustWidth" Style="{StaticResource AppColumnSplitterStyle}" ManipulationDelta="AppColumnSplitter_ManipulationDelta" PointerEntered="AppColumnSplitter_PointerEntered" PointerExited="AppColumnSplitter_PointerExited">
                                 <Rectangle Width="1" HorizontalAlignment="Center" Fill="{ThemeResource DividerStrokeColorDefaultBrush}"/>
                             </Border>
 
-                            <TextBlock Grid.Column="12" Text="Firewall" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <TextBlock Grid.Column="12" x:Uid="Apps_ColumnFirewall" Text="Firewall" Style="{StaticResource CaptionTextBlockStyle}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </Grid>
                     </Border>
 
@@ -274,7 +276,7 @@
                               BorderThickness="0,0,0,1"
                               ColumnDefinitions="*,Auto,Auto">
                             <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="Anwendungsdetails"
+                                <TextBlock x:Uid="Apps_DetailsTitle" Text="Anwendungsdetails"
                                            Style="{ThemeResource BodyStrongTextBlockStyle}"/>
                                 <TextBlock Text="{x:Bind ViewModel.SelectedAppName, Mode=OneWay}"
                                            Style="{ThemeResource CaptionTextBlockStyle}"
@@ -283,6 +285,7 @@
                             </StackPanel>
 
                             <Button Grid.Column="1"
+                                    x:Uid="Apps_DetailsRefreshTooltip"
                                     Style="{ThemeResource SubtleButtonStyle}"
                                     ToolTipService.ToolTip="Aktualisieren"
                                     Command="{x:Bind ViewModel.RefreshCommand}">
@@ -290,6 +293,7 @@
                             </Button>
 
                             <Button Grid.Column="2"
+                                    x:Uid="Apps_DetailsCloseTooltip"
                                     Style="{ThemeResource SubtleButtonStyle}"
                                     ToolTipService.ToolTip="Schließen"
                                     Command="{x:Bind ViewModel.CloseDetailsCommand}">
@@ -306,13 +310,13 @@
                                    TextWrapping="Wrap"/>
 
                         <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Padding="16,8,16,8">
-                            <ToggleButton Content="Aktivität"
+                            <ToggleButton x:Uid="Apps_SectionActivity" Content="Aktivität"
                                           IsChecked="{x:Bind ViewModel.IsActivitySection, Mode=OneWay}"
                                           Command="{x:Bind ViewModel.OpenActivitySectionCommand}"/>
-                            <ToggleButton Content="Firewall"
+                            <ToggleButton x:Uid="Apps_SectionFirewall" Content="Firewall"
                                           IsChecked="{x:Bind ViewModel.IsFirewallSection, Mode=OneWay}"
                                           Command="{x:Bind ViewModel.OpenFirewallSectionCommand}"/>
-                            <ToggleButton Content="Eigenschaften"
+                            <ToggleButton x:Uid="Apps_SectionProperties" Content="Eigenschaften"
                                           IsChecked="{x:Bind ViewModel.IsPropertiesSection, Mode=OneWay}"
                                           Command="{x:Bind ViewModel.OpenPropertiesSectionCommand}"/>
                         </StackPanel>
@@ -327,7 +331,7 @@
                                                 Padding="10,8"
                                                 Margin="0,0,6,0">
                                             <StackPanel>
-                                                <TextBlock Text="Verbindungen (24h)"
+                                                <TextBlock x:Uid="Apps_ConnectionsCard" Text="Verbindungen (24h)"
                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 <TextBlock Text="{x:Bind ViewModel.ConnectionCount24h, Mode=OneWay}"
                                                            FontSize="20"
@@ -341,7 +345,7 @@
                                                 Padding="10,8"
                                                 Margin="6,0,0,0">
                                             <StackPanel>
-                                                <TextBlock Text="Verdächtig (24h)"
+                                                <TextBlock x:Uid="Apps_SuspiciousCard" Text="Verdächtig (24h)"
                                                            Style="{ThemeResource CaptionTextBlockStyle}"/>
                                                 <TextBlock Text="{x:Bind ViewModel.SuspiciousCount24h, Mode=OneWay}"
                                                            FontSize="20"
@@ -386,7 +390,7 @@
                                             Spacing="10"
                                             Visibility="{x:Bind ViewModel.AppFirewallRules.IsLoading, Mode=OneWay}">
                                     <ProgressRing IsActive="True" Width="36" Height="36"/>
-                                    <TextBlock Text="Lade Firewall-Regeln …"
+                                    <TextBlock x:Uid="Apps_LoadingFirewallRules" Text="Lade Firewall-Regeln …"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                                 </StackPanel>
 
@@ -395,10 +399,10 @@
                                             MaxWidth="320"
                                             Spacing="8"
                                             Visibility="{x:Bind ViewModel.AppFirewallRules.HasNoRules, Mode=OneWay}">
-                                    <TextBlock Text="Keine Firewall-Regeln"
+                                    <TextBlock x:Uid="Apps_NoFirewallRulesTitle" Text="Keine Firewall-Regeln"
                                                Style="{ThemeResource BodyStrongTextBlockStyle}"
                                                HorizontalAlignment="Center"/>
-                                    <TextBlock Text="Für diese Anwendung sind keine spezifischen Regeln vorhanden."
+                                    <TextBlock x:Uid="Apps_NoFirewallRulesBody" Text="Für diese Anwendung sind keine spezifischen Regeln vorhanden."
                                                TextWrapping="Wrap"
                                                TextAlignment="Center"
                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -458,6 +462,7 @@
                                                               VerticalAlignment="Center"/>
 
                                                 <Button Grid.Column="3" Grid.RowSpan="2"
+                                                        x:Uid="Apps_RemoveRuleTooltip"
                                                         Style="{StaticResource SubtleButtonStyle}"
                                                         Command="{x:Bind RemoveCommand}"
                                                         ToolTipService.ToolTip="Regel entfernen">
@@ -471,36 +476,36 @@
 
                             <ScrollViewer Visibility="{x:Bind ViewModel.PropertiesVisibility, Mode=OneWay}">
                                 <StackPanel Padding="16,8,16,16" Spacing="10">
-                                    <TextBlock Text="Eigenschaften"
+                                    <TextBlock x:Uid="Apps_PropertiesHeader" Text="Eigenschaften"
                                                Style="{ThemeResource BodyStrongTextBlockStyle}"/>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Pfad" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropPath" Text="Pfad" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedAppPath, Mode=OneWay}" TextWrapping="Wrap"/>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Datei" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropFile" Text="Datei" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.FileExistsDisplay, Mode=OneWay}"/>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Vertrauensstatus" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropTrustStatus" Text="Vertrauensstatus" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedTrustDisplay, Mode=OneWay}"/>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Firewallstatus" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropFirewallStatus" Text="Firewallstatus" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedBlockDisplay, Mode=OneWay}"/>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Letzte Sichtung" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropLastSeen" Text="Letzte Sichtung" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedLastSeenDisplay, Mode=OneWay}"/>
                                     </Grid>
 
                                     <Grid ColumnDefinitions="140,*">
-                                        <TextBlock Grid.Column="0" Text="Traffic gesamt" Style="{ThemeResource CaptionTextBlockStyle}"/>
+                                        <TextBlock Grid.Column="0" x:Uid="Apps_PropTrafficTotal" Text="Traffic gesamt" Style="{ThemeResource CaptionTextBlockStyle}"/>
                                         <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedTrafficDisplay, Mode=OneWay}"/>
                                     </Grid>
                                 </StackPanel>

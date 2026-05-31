@@ -3,6 +3,7 @@
     x:Class="NetOverseer.App.Views.BlockConfirmationDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Uid="BlockDialog"
     Title="Verbindung blockieren"
     PrimaryButtonText="Blockieren"
     CloseButtonText="Abbrechen"
@@ -28,20 +29,20 @@
         </Border>
 
         <!-- Block-Art wählen -->
-        <TextBlock Text="Was soll blockiert werden?"
+        <TextBlock x:Uid="BlockDialog_Question" Text="Was soll blockiert werden?"
                    Style="{StaticResource BodyStrongTextBlockStyle}"/>
 
         <RadioButtons x:Name="BlockModeGroup" SelectedIndex="0">
-            <RadioButton x:Name="RadioIpOnly"
+            <RadioButton x:Name="RadioIpOnly" x:Uid="BlockDialog_IpOnly"
                          Content="Nur diese IP-Adresse"/>
-            <RadioButton x:Name="RadioAppOnly"
+            <RadioButton x:Name="RadioAppOnly" x:Uid="BlockDialog_AppOnly"
                          Content="Gesamte Anwendung (alle Verbindungen)"/>
-            <RadioButton x:Name="RadioAppAndIp"
+            <RadioButton x:Name="RadioAppAndIp" x:Uid="BlockDialog_AppAndIp"
                          Content="Anwendung + diese IP (doppelte Sperre)"/>
         </RadioButtons>
 
         <!-- Systemapp-Warnung (wird programmatisch ein-/ausgeblendet) -->
-        <InfoBar x:Name="SystemAppWarning"
+        <InfoBar x:Name="SystemAppWarning" x:Uid="BlockDialog_SystemWarning"
                  IsOpen="False"
                  IsClosable="False"
                  Severity="Warning"
@@ -49,7 +50,7 @@
                  Message="Diese Anwendung ist eine Windows-Systemkomponente. Das Blockieren kann die Systemstabilität oder Windows Update beeinträchtigen."/>
 
         <!-- Admin-Warnung (sichtbar wenn nicht als Admin) -->
-        <InfoBar x:Name="AdminWarning"
+        <InfoBar x:Name="AdminWarning" x:Uid="BlockDialog_AdminWarning"
                  IsOpen="False"
                  IsClosable="False"
                  Severity="Informational"

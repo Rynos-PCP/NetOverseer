@@ -279,11 +279,11 @@ public sealed partial class ConnectionItemViewModel : ObservableObject
 
     private static string MapState(ConnectionState state) => state switch
     {
-        ConnectionState.Established => "Aktiv",
-        ConnectionState.Listen      => "Lauscht",
-        ConnectionState.TimeWait    => "Schließt",
-        ConnectionState.CloseWait   => "Schließt",
-        ConnectionState.Closed      => "Geschlossen",
+        ConnectionState.Established => Services.LocalizationService.GetString("ConnState_Active"),
+        ConnectionState.Listen      => Services.LocalizationService.GetString("ConnState_Listen"),
+        ConnectionState.TimeWait    => Services.LocalizationService.GetString("ConnState_Closing"),
+        ConnectionState.CloseWait   => Services.LocalizationService.GetString("ConnState_Closing"),
+        ConnectionState.Closed      => Services.LocalizationService.GetString("ConnState_Closed"),
         _                           => "–"
     };
 
